@@ -1,0 +1,50 @@
+{
+    "rotinas": {
+        "padrao_24h": {
+            "descricao": "Sistemas que funcionam 24 horas",
+            "grades": ["GEN02", "SEL05"],
+            "horarios": {
+                "dias_uteis": {"inicio": "00:00:00", "fim": "23:59:59"},
+                "sabados_feriados": {"inicio": "00:00:00", "fim": "23:59:59"},
+                "domingos": {"inicio": "12:00:00", "fim": "23:59:59"}
+            }
+        },
+        "padrao_comercial": {
+            "descricao": "Sistemas com horário comercial estendido",
+            "grades": ["SEL01", "TES01", "STR01"],
+            "horarios": {
+                "dias_uteis": {"inicio": "06:30:00", "fim": "18:30:00"},
+                "dia_24_12": {"inicio": "06:30:00", "fim": "13:00:00"},
+                "ultimo_dia_util": {"inicio": "06:30:00", "fim": "13:00:00"}
+            }
+        },
+        "padrao_madrugada": {
+            "descricao": "Sistemas que iniciam na madrugada",
+            "grades": ["AGE01", "CIR03", "RCO02", "RDC01"],
+            "horarios": {
+                "dias_uteis": {"inicio": "04:00:00", "fim": "23:59:59"},
+                "sabados_feriados": {"inicio": "04:00:00", "fim": "23:59:59"},
+                "domingos": {"inicio": "12:00:00", "fim": "23:59:59"}
+            }
+        },
+        "padrao_matutino": {
+            "descricao": "Sistemas que operam principalmente pela manhã",
+            "grades": ["CIR04", "SML01"],
+            "horarios": {
+                "dias_uteis": {"inicio": "04:00:00", "fim": "15:30:00"},
+                "dia_24_12": {"inicio": "04:00:00", "fim": "12:00:00"},
+                "sabados": {"inicio": "04:00:00", "fim": "15:30:00"},
+                "domingos": {"inicio": "12:00:00", "fim": "15:30:00"}
+            }
+        }
+    },
+    "classes_deteccao": {
+        "dentro_horario": 0,
+        "fora_horario": 1
+    },
+    "parametros_analise": {
+        "tolerancia_minutos": 15,
+        "ignorar_feriados": false,
+        "considerar_fuso_horario": true
+    }
+} 

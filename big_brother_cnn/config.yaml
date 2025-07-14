@@ -1,0 +1,62 @@
+# Configurações do modelo CNN
+# Dimensões da imagem de entrada [altura, largura, canais]
+# Número de classes para classificação
+# Taxa de aprendizado
+# Tamanho do lote de dados
+# Número de épocas de treinamento
+# Congelar camadas do ResNet-18 para transfer learning
+model:
+  input_shape: [224, 224, 3]  
+  num_classes: 10             
+  learning_rate: 0.0001       
+  batch_size: 32
+  epochs: 50
+  freeze_backbone: true       
+
+# Configurações de dados
+# Percentual de dados para treino, validação e teste
+# Aumento de dados para melhoria do modelo
+data:
+  train_split: 0.8           
+  validation_split: 0.1      
+  test_split: 0.1           
+  augmentation:
+    rotation_range: 20
+    width_shift_range: 0.2
+    height_shift_range: 0.2
+    horizontal_flip: true
+    brightness_range: [0.8, 1.2]
+    zoom_range: 0.1
+    shear_range: 0.1
+
+# Configurações de treino
+# Diretório para salvar os checkpoints do modelo
+# Número de épocas sem melhoria para parar o treinamento
+# Número de épocas sem melhoria para reduzir a taxa de aprendizado
+# Fator de redução da taxa de aprendizado
+# Taxa mínima de aprendizado
+# Diretório para salvar os checkpoints do modelo
+# Número de épocas sem melhoria para parar o treinamento
+# Número de épocas sem melhoria para reduzir a taxa de aprendizado
+# Fator de redução da taxa de aprendizado
+# Taxa mínima de aprendizado
+training:
+  checkpoint_dir: "checkpoints/"
+  early_stopping_patience: 5
+  reduce_lr_patience: 3
+  lr_factor: 0.5              
+  min_lr: 0.00001            
+
+# Configurações de inferência
+# Limiar de confiança para detecção
+# Diretório para salvar os relatórios de detecção 
+inference:
+  confidence_threshold: 0.85  
+  report_output: "reports/"
+  
+# Configurações de device
+# Usar GPU se disponível
+# Número de workers para DataLoader 
+device:
+  use_cuda: true              
+  num_workers: 4              

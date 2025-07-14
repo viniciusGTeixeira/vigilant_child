@@ -1,0 +1,308 @@
+GRADE;MENSAGENS ASSOCIADAS;ABERTURA 24/12 (se dia util);FECHAMENTO 24/12 (se dia util);ABERTURA ultimo dia util do ano;FECHAMENTO ultimo dia util do ano;ABERTURA Demais Dias uteis;FECHAMENTO Demais Dias uteis;ABERTURA Sabados e Feriados;FECHAMENTO Sabados e Feriados;ABERTURA Domingos;FECHAMENTO Domingos
+AGE01;STR0003;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0004;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0005;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0006;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0007;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0008;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0010;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0011;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0020;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0021;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0022;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0025;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0026;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0029;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0033;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0034;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0037;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0039;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0040;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0041;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0045;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0046;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0047;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE01;STR0048;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+AGE02;STR0003;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0004;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0005;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0006;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0007;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0008;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0010;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0011;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0020;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0021;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0022;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0025;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0026;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0029;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0033;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0034;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0037;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0039;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0040;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0041;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0045;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0046;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0047;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+AGE02;STR0048;12:00:00;12:01:00;12:00:00;12:01:00;12:00:00;12:01:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0003;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0004;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0005;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0006;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0010;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0017;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0018;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0019;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0020;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0021;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0058;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0059;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR0060;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1001;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1002;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1003;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1004;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1005;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1006;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1007;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1008;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1009;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1011;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1012;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1013;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1014;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1015;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1018;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1022;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1023;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1024;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1025;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR01;CIR1026;06:30:00;12:55:00;06:30:00;12:55:00;06:30:00;18:25:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR02;CIR1016;06:30:00;22:00:00;06:30:00;22:00:00;06:30:00;22:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR02;CIR1017;06:30:00;22:00:00;06:30:00;22:00:00;06:30:00;22:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR02;CIR1031;06:30:00;22:00:00;06:30:00;22:00:00;06:30:00;22:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CIR03;CIR0008;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR0009;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR0016;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR0030;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR1030;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR1032;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR1033;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR1034;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR03;CIR1035;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+CIR04;CIR0051;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;15:30:00;04:00:00;15:30:00;12:00:00;15:30:00
+CIR04;CIR0052;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;15:30:00;04:00:00;15:30:00;12:00:00;15:30:00
+CIR04;CIR0055;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;15:30:00;04:00:00;15:30:00;12:00:00;15:30:00
+CIR04;CIR0056;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;15:30:00;04:00:00;15:30:00;12:00:00;15:30:00
+CIR04;CIR0061;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;15:30:00;04:00:00;15:30:00;12:00:00;15:30:00
+CIR04;CIR0062;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;15:30:00;04:00:00;15:30:00;12:00:00;15:30:00
+CMP03;CMP0001;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CMP03;CMP0002;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CMP03;CMP0003;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CMP03;CMP0004;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CMP03;CMP0005;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+CMP03;CMP0006;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+GEN01;GEN0001;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0003;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0005;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0006;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0007;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0008;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0012;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0014;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0016;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0017;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0018;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0019;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN01;GEN0020;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+GEN02;GEN0004;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+GEN02;GEN0015;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+GEN02;GEN0021;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+LDL01;LDL0002;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0005;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0006;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0009;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0011;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0012;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0014;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0015;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0020;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL01;LDL0024;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL04;LDL0004;06:30:00;12:30:00;06:30:00;12:30:00;06:30:00;18:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL04;LDL0008;06:30:00;12:30:00;06:30:00;12:30:00;06:30:00;18:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LDL04;LDL0022;06:30:00;12:30:00;06:30:00;12:30:00;06:30:00;18:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI01;LPI0003;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI01;LPII0004;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI01;LPI0005;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI01;LPI0008;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI02;LPI0001;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;19:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI02;LPII0002;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;19:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI02;LPI0006;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;19:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LPI02;LPI0007;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;19:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LTR01;LTR0003;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LTR01;LTR0004;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LTR01;LTR0005;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+LTR01;LTR0006;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RCO01;RCO0002;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RCO01;RCO0010;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RCO01;RCO0011;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RCO01;RCO0019;06:30:00; 13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RCO02;RCO0001;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RCO02;RCO0003;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RCO02;RCO0005;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RCO02;RCO0006;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RCO02;RCO0007;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RCO02;RCO0014;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC01;RDC0001;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC01;RDC0006;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC01;RDC0011;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC01;RDC0012;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC01;RDC0015;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC01;RDC0016;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+RDC02;RDC0002;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC02;RDC0004;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC02;RDC0007;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC02;RDC0008;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC02;RDC0009;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC02;RDC0013;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC02;RDC0014;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC03;RDC0003;11:00:00;13:00:00;11:00:00;13:00:00;15:00:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+RDC03;RDC0005;11:00:00;13:00:00;11:00:00;13:00:00;15:00:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1003;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1007;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1013;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1014;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01; SEL1016;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1021;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1023;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1031;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1032;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1052;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1054;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1056;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1058;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1063;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1066;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1069;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1073;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1074;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1080;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1081;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1082;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1095;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1096;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1099;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1100;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1422;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1456;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1601;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1602;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL1620;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL01;SEL3400;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;SEL1020;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;SEL1022;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;  SEL1052 *;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;  SEL1054 *;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;  SEL1056 *;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;SEL1400;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;SEL3052;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL03;SEL3054;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;20:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL04;SEL1009;06:30:00;13:30:00;06:30:00;13:30:00;06:30:00;19:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SEL05;SEL1024;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1026;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1027;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1028;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1603;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1604;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1605;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1606;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1607;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1611;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1612;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1613;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL1614;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL9001;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL9002;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SEL05;SEL9003 ;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;00:00:00;23:59:59;12:00:00;23:59:59
+SLB01;SLB0002;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SLB01;SLB0007;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SLB01;SLB0008;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SLB02;SLB0001;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+SLB02;SLB0003;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+SLB02;SLB0005;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+SLB02;SLB0006;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+SLB04;   SLB0001 **;04:00:00;12:00:00;04:00:00;12:00:00;04:00:00;16:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SME01;SME0001;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SME01;SME0002;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SME01;SME0004;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SME02;SME0003;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+SML01;SML0001;08:00:00;10:00:00;N�o dispon�vel;N�o dispon�vel;08:00:00;13:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SML01;SML0002;08:00:00;10:00:00;N�o dispon�vel;N�o dispon�vel;08:00:00;13:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SML01;SML0004;08:00:00;10:00:00;N�o dispon�vel;N�o dispon�vel;08:00:00;13:00:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+SML02;SML0003;08:00:00;10:00:00;N�o dispon�vel;N�o dispon�vel;08:00:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0003;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0004;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0010;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0011;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0020;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0021;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0022;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0029;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0033;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0041;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0045;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0046;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR01;STR0048;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0005;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0006;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0007;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0008;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0025;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0026;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0034;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0037;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0039;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0040;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR02;STR0047;06:30:00;12:30:00;06:30:00;12:00:00;06:30:00;17:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+STR03;STR0001;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0012;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0013;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0014;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0015;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0016;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0017;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0018;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0019;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0030;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0031;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0032;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0035;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0042;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0043;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0044;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+STR03;STR0050;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+TES01;TES0001;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0002;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0004;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0007;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0010;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0015;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0016;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0017;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0018;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0034;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0037;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0101;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0104;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0105;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0117;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0118;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0119;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0123;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES01;TES0134;06:30:00;13:00:00;06:30:00;13:00:00;06:30:00;18:30:00;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel;N�o dispon�vel
+TES04;TES0031;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;04:00:00;23:59:59;12:00:00;23:59:59
+;;;;;;;;;;;
+*  Quando n�o envolver liquida��o financeira pelo STR.;;;;;;;;;;;
+** Cobran�a com vencimento no mesmo dia.;;;;;;;;;;;
