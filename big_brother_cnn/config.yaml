@@ -35,11 +35,6 @@ data:
 # Número de épocas sem melhoria para reduzir a taxa de aprendizado
 # Fator de redução da taxa de aprendizado
 # Taxa mínima de aprendizado
-# Diretório para salvar os checkpoints do modelo
-# Número de épocas sem melhoria para parar o treinamento
-# Número de épocas sem melhoria para reduzir a taxa de aprendizado
-# Fator de redução da taxa de aprendizado
-# Taxa mínima de aprendizado
 training:
   checkpoint_dir: "checkpoints/"
   early_stopping_patience: 5
@@ -116,7 +111,20 @@ models:
 
 # Configurações de Localização e Timezone
 timezone: 'America/Sao_Paulo'
-pattern_db_path: 'data/patterns.db'
+
+# Configurações do Banco de Dados
+database:
+  engine: 'postgresql'
+  host: '${BB_DB_HOST:-localhost}'
+  port: ${BB_DB_PORT:-5432}
+  name: '${BB_DB_NAME:-bigbrother}'
+  user: '${BB_DB_USER}'
+  password: '${BB_DB_PASSWORD}'
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+  pool_recycle: 1800
+  echo: false
 
 # Sistema de Alertas
 alerts:

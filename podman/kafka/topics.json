@@ -1,0 +1,70 @@
+{
+    "topics": [
+        {
+            "name": "raw-detections",
+            "partitions": 3,
+            "replication_factor": 1,
+            "config": {
+                "retention.ms": 604800000,
+                "cleanup.policy": "delete"
+            },
+            "description": "Eventos brutos de detecção das câmeras"
+        },
+        {
+            "name": "analyzed-events",
+            "partitions": 3,
+            "replication_factor": 1,
+            "config": {
+                "retention.ms": 604800000,
+                "cleanup.policy": "delete"
+            },
+            "description": "Eventos após análise dos analyzers"
+        },
+        {
+            "name": "pattern-alerts",
+            "partitions": 2,
+            "replication_factor": 1,
+            "config": {
+                "retention.ms": 259200000,
+                "cleanup.policy": "delete"
+            },
+            "description": "Alertas de padrões detectados"
+        },
+        {
+            "name": "system-metrics",
+            "partitions": 1,
+            "replication_factor": 1,
+            "config": {
+                "retention.ms": 86400000,
+                "cleanup.policy": "delete"
+            },
+            "description": "Métricas do sistema para monitoramento"
+        }
+    ],
+    "consumer_groups": [
+        {
+            "name": "analyzer-group",
+            "topics": ["raw-detections"],
+            "instances": 3,
+            "description": "Grupo de analyzers processando detecções"
+        },
+        {
+            "name": "pattern-detector",
+            "topics": ["analyzed-events"],
+            "instances": 2,
+            "description": "Detector de padrões comportamentais"
+        },
+        {
+            "name": "alert-processor",
+            "topics": ["pattern-alerts"],
+            "instances": 1,
+            "description": "Processador de alertas"
+        },
+        {
+            "name": "metrics-collector",
+            "topics": ["system-metrics"],
+            "instances": 1,
+            "description": "Coletor de métricas do sistema"
+        }
+    ]
+} 

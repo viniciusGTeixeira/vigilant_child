@@ -15,7 +15,9 @@ tqdm>=4.64.0
 face-recognition>=1.3.0
 dlib>=19.24.0
 pytesseract>=0.3.10
-sqlite3  # Built-in no Python
+psycopg2-binary>=2.9.0  # PostgreSQL adapter
+SQLAlchemy>=2.0.0  # SQL ORM
+alembic>=1.11.0  # Database migrations
 dataclasses  # Built-in no Python 3.7+
 
 # Para detecção de objetos avançada (opcional)

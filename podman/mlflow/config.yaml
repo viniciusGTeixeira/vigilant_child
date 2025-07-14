@@ -1,0 +1,98 @@
+# Configuração do MLflow para Big Brother CNN
+server:
+  host: 0.0.0.0
+  port: 5000
+  workers: 4
+
+tracking:
+  # URI do servidor MLflow
+  uri: http://mlflow:5000
+  
+  # Configuração do backend de armazenamento
+  backend_store:
+    type: postgresql
+    uri: postgresql://mlflow:mlflow@postgres:5432/mlflow
+  
+  # Configuração do artifact store
+  artifact_store:
+    type: s3
+    uri: s3://models
+    endpoint_url: http://minio:9000
+    access_key_id: ${MINIO_ACCESS_KEY}
+    secret_access_key: ${MINIO_SECRET_KEY}
+    ignore_tls: true
+
+# Configurações de experimentos
+experiments:
+  default_name: "bigbrother-cnn"
+  
+  # Experimentos pré-definidos
+  predefined:
+    - name: "face-recognition"
+      tags:
+        type: "detection"
+        model: "resnet"
+    - name: "badge-detection"
+      tags:
+        type: "detection"
+        model: "yolo"
+    - name: "attribute-analysis"
+      tags:
+        type: "classification"
+        model: "resnet"
+
+# Configurações de logging
+logging:
+  level: INFO
+  format: "%(asctime)s [%(levelname)s] %(message)s"
+  file: "/var/log/mlflow/server.log"
+
+# Configurações de métricas
+metrics:
+  prometheus:
+    enabled: true
+    path: /metrics
+
+# Configurações de autenticação
+auth:
+  enabled: true
+  type: basic
+  users_file: /etc/mlflow/users.txt
+
+# Configurações de registro de modelos
+model_registry:
+  enabled: true
+  sync_schedule: "0 * * * *"  # A cada hora
+  
+  # Estágios do ciclo de vida dos modelos
+  stages:
+    - name: "Development"
+      auto_transition: false
+    - name: "Staging"
+      auto_transition: false
+    - name: "Production"
+      auto_transition: false
+    - name: "Archived"
+      auto_transition: true
+      transition_criteria:
+        days_without_update: 90
+
+# Configurações de notificação
+notifications:
+  enabled: true
+  channels:
+    - type: webhook
+      url: http://fastapi:8000/mlflow/webhook
+      events: ["model.stage_transition", "run.completed"]
+    - type: prometheus
+      events: ["metric.*"]
+
+# Configurações de recursos
+resources:
+  max_artifacts_size: 1GB
+  max_metric_history: 1000
+  max_experiments: 100
+  cleanup:
+    enabled: true
+    runs_ttl_days: 30
+    deleted_ttl_days: 30 

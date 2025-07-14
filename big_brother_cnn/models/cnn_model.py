@@ -7,19 +7,21 @@ import os
 class BigBrotherCNN(nn.Module):
     def __init__(self, config_path='config.yaml'):
         super(BigBrotherCNN, self).__init__()
-        
-        # Carregar configurações
+        """
+        Inicializa o modelo BigBrotherCNN
+        Carrega configurações do arquivo config.yaml
+        Construir modelo com ResNet-18 pré-treinado
+        Configurar otimizador e loss
+        """
         with open(config_path, 'r') as f:
             self.config = yaml.safe_load(f)
         
         self.num_classes = self.config['model']['num_classes']
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        # Construir modelo
         self.model = self._build_model()
         self.model.to(self.device)
         
-        # Configurar otimizador e loss
         self.optimizer = torch.optim.Adam(
             self.model.parameters(), 
             lr=self.config['model']['learning_rate']
@@ -29,19 +31,19 @@ class BigBrotherCNN(nn.Module):
     def _build_model(self):
         """
         Constrói a arquitetura CNN usando ResNet-18 pré-treinado
-        """
         # Usar ResNet-18 pré-treinado como backbone
+        # Remover a última camada de classificação
+        # Congelar as camadas do backbone para transfer learning
+        # Adicionar camadas de classificação personalizadas
+        """
         backbone = models.resnet18(pretrained=True)
         
-        # Remover a última camada de classificação
         self.backbone = nn.Sequential(*list(backbone.children())[:-1])
         
-        # Congelar as camadas do backbone para transfer learning
         if self.config['model'].get('freeze_backbone', True):
             for param in self.backbone.parameters():
                 param.requires_grad = False
         
-        # Adicionar camadas de classificação personalizadas
         model = nn.Sequential(
             self.backbone,
             nn.Flatten(),

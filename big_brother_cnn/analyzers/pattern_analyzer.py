@@ -10,8 +10,10 @@ from typing import Dict, Any, List, Optional, Tuple
 import json
 from collections import defaultdict, deque
 from dataclasses import dataclass
-import sqlite3
+import psycopg2
+from psycopg2.extras import Json
 import os
+import yaml
 
 from .base_analyzer import BaseAnalyzer
 
@@ -46,7 +48,6 @@ class PatternAnalyzer:
         self.detection_history = deque(maxlen=10000)  # Histórico limitado em memória
         self.employee_patterns = defaultdict(dict)
         self.location_patterns = defaultdict(dict)
-        self.db_path = config.get('pattern_db_path', 'patterns.db')
         
         # Configurações específicas para padrões
         self.pattern_config = config.get('analyzers', {}).get('patterns', {
@@ -59,57 +60,75 @@ class PatternAnalyzer:
             'behavior_change_threshold': 0.3
         })
         
-        # Inicializar banco de dados
+        # Inicializar conexão com banco de dados
         self._init_database()
+    
+    def _get_db_connection(self):
+        """
+        Cria uma nova conexão com o banco de dados PostgreSQL
+        """
+        db_config = self.config.get('database', {})
+        return psycopg2.connect(
+            host=db_config.get('host', 'localhost'),
+            port=db_config.get('port', 5432),
+            dbname=db_config.get('name', 'bigbrother'),
+            user=db_config.get('user'),
+            password=db_config.get('password')
+        )
     
     def _init_database(self):
         """
-        Inicializa banco de dados SQLite para armazenar histórico de padrões
+        Inicializa banco de dados PostgreSQL para armazenar histórico de padrões
         """
         try:
-            with sqlite3.connect(self.db_path) as conn:
-                conn.execute('''
-                    CREATE TABLE IF NOT EXISTS detections (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        timestamp TEXT NOT NULL,
-                        employee_id TEXT,
-                        location TEXT NOT NULL,
-                        confidence REAL,
-                        attributes TEXT,
-                        face_info TEXT,
-                        badge_info TEXT
-                    )
-                ''')
+            with self._get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    # Criar tabela de detecções
+                    cur.execute('''
+                        CREATE TABLE IF NOT EXISTS detections (
+                            id SERIAL PRIMARY KEY,
+                            timestamp TIMESTAMP NOT NULL,
+                            employee_id VARCHAR(50),
+                            location VARCHAR(100) NOT NULL,
+                            confidence FLOAT,
+                            attributes JSONB,
+                            face_info JSONB,
+                            badge_info JSONB
+                        )
+                    ''')
+                    
+                    # Criar tabela de padrões
+                    cur.execute('''
+                        CREATE TABLE IF NOT EXISTS patterns (
+                            id SERIAL PRIMARY KEY,
+                            employee_id VARCHAR(50) NOT NULL,
+                            pattern_type VARCHAR(50) NOT NULL,
+                            pattern_data JSONB NOT NULL,
+                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            confidence FLOAT
+                        )
+                    ''')
+                    
+                    # Criar tabela de anomalias
+                    cur.execute('''
+                        CREATE TABLE IF NOT EXISTS anomalies (
+                            id SERIAL PRIMARY KEY,
+                            timestamp TIMESTAMP NOT NULL,
+                            employee_id VARCHAR(50),
+                            anomaly_type VARCHAR(50) NOT NULL,
+                            description TEXT,
+                            severity VARCHAR(20),
+                            pattern_data JSONB
+                        )
+                    ''')
+                    
+                    # Criar índices para performance
+                    cur.execute('CREATE INDEX IF NOT EXISTS idx_detections_timestamp ON detections(timestamp)')
+                    cur.execute('CREATE INDEX IF NOT EXISTS idx_detections_employee ON detections(employee_id)')
+                    cur.execute('CREATE INDEX IF NOT EXISTS idx_patterns_employee ON patterns(employee_id)')
                 
-                conn.execute('''
-                    CREATE TABLE IF NOT EXISTS patterns (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        employee_id TEXT NOT NULL,
-                        pattern_type TEXT NOT NULL,
-                        pattern_data TEXT NOT NULL,
-                        created_at TEXT NOT NULL,
-                        updated_at TEXT NOT NULL,
-                        confidence REAL
-                    )
-                ''')
-                
-                conn.execute('''
-                    CREATE TABLE IF NOT EXISTS anomalies (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        timestamp TEXT NOT NULL,
-                        employee_id TEXT,
-                        anomaly_type TEXT NOT NULL,
-                        description TEXT,
-                        severity TEXT,
-                        pattern_data TEXT
-                    )
-                ''')
-                
-                # Índices para performance
-                conn.execute('CREATE INDEX IF NOT EXISTS idx_detections_timestamp ON detections(timestamp)')
-                conn.execute('CREATE INDEX IF NOT EXISTS idx_detections_employee ON detections(employee_id)')
-                conn.execute('CREATE INDEX IF NOT EXISTS idx_patterns_employee ON patterns(employee_id)')
-                
+                conn.commit()
             print("Banco de dados de padrões inicializado")
             
         except Exception as e:
@@ -225,38 +244,39 @@ class PatternAnalyzer:
         try:
             cutoff_time = datetime.now() - timedelta(hours=hours)
             
-            with sqlite3.connect(self.db_path) as conn:
-                if employee_id:
-                    cursor = conn.execute('''
-                        SELECT timestamp, employee_id, location, confidence, 
-                               attributes, face_info, badge_info
-                        FROM detections 
-                        WHERE employee_id = ? AND timestamp > ?
-                        ORDER BY timestamp DESC
-                    ''', (employee_id, cutoff_time.isoformat()))
-                else:
-                    cursor = conn.execute('''
-                        SELECT timestamp, employee_id, location, confidence, 
-                               attributes, face_info, badge_info
-                        FROM detections 
-                        WHERE timestamp > ?
-                        ORDER BY timestamp DESC
-                    ''', (cutoff_time.isoformat(),))
-                
-                records = []
-                for row in cursor.fetchall():
-                    record = DetectionRecord(
-                        timestamp=datetime.fromisoformat(row[0]),
-                        employee_id=row[1] or 'unknown',
-                        location=row[2],
-                        confidence=row[3],
-                        attributes=json.loads(row[4]) if row[4] else {},
-                        face_info=json.loads(row[5]) if row[5] else {},
-                        badge_info=json.loads(row[6]) if row[6] else {}
-                    )
-                    records.append(record)
-                
-                return records
+            with self._get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    if employee_id:
+                        cur.execute('''
+                            SELECT timestamp, employee_id, location, confidence, 
+                                   attributes, face_info, badge_info
+                            FROM detections 
+                            WHERE employee_id = %s AND timestamp > %s
+                            ORDER BY timestamp DESC
+                        ''', (employee_id, cutoff_time))
+                    else:
+                        cur.execute('''
+                            SELECT timestamp, employee_id, location, confidence, 
+                                   attributes, face_info, badge_info
+                            FROM detections 
+                            WHERE timestamp > %s
+                            ORDER BY timestamp DESC
+                        ''', (cutoff_time,))
+                    
+                    records = []
+                    for row in cur.fetchall():
+                        record = DetectionRecord(
+                            timestamp=row[0],
+                            employee_id=row[1] or 'unknown',
+                            location=row[2],
+                            confidence=row[3],
+                            attributes=row[4],
+                            face_info=row[5],
+                            badge_info=row[6]
+                        )
+                        records.append(record)
+                    
+                    return records
                 
         except Exception as e:
             print(f"Erro ao obter detecções recentes: {e}")
@@ -270,25 +290,26 @@ class PatternAnalyzer:
             if not employee_id:
                 return {}
             
-            with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute('''
-                    SELECT pattern_type, pattern_data, confidence, updated_at
-                    FROM patterns 
-                    WHERE employee_id = ?
-                    ORDER BY updated_at DESC
-                ''', (employee_id,))
-                
-                patterns = {}
-                for row in cursor.fetchall():
-                    pattern_type = row[0]
-                    pattern_data = json.loads(row[1])
-                    patterns[pattern_type] = {
-                        'data': pattern_data,
-                        'confidence': row[2],
-                        'updated_at': row[3]
-                    }
-                
-                return patterns
+            with self._get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute('''
+                        SELECT pattern_type, pattern_data, confidence, updated_at
+                        FROM patterns 
+                        WHERE employee_id = %s
+                        ORDER BY updated_at DESC
+                    ''', (employee_id,))
+                    
+                    patterns = {}
+                    for row in cur.fetchall():
+                        pattern_type = row[0]
+                        pattern_data = row[1]
+                        patterns[pattern_type] = {
+                            'data': pattern_data,
+                            'confidence': row[2],
+                            'updated_at': row[3]
+                        }
+                    
+                    return patterns
                 
         except Exception as e:
             print(f"Erro ao obter padrões históricos: {e}")
@@ -1134,20 +1155,22 @@ class PatternAnalyzer:
         Salva detecção no banco de dados
         """
         try:
-            with sqlite3.connect(self.db_path) as conn:
-                conn.execute('''
-                    INSERT INTO detections 
-                    (timestamp, employee_id, location, confidence, attributes, face_info, badge_info)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    record.timestamp.isoformat(),
-                    record.employee_id,
-                    record.location,
-                    record.confidence,
-                    json.dumps(record.attributes),
-                    json.dumps(record.face_info),
-                    json.dumps(record.badge_info)
-                ))
+            with self._get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute('''
+                        INSERT INTO detections 
+                        (timestamp, employee_id, location, confidence, attributes, face_info, badge_info)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ''', (
+                        record.timestamp,
+                        record.employee_id,
+                        record.location,
+                        record.confidence,
+                        Json(record.attributes),
+                        Json(record.face_info),
+                        Json(record.badge_info)
+                    ))
+                conn.commit()
         except Exception as e:
             print(f"Erro ao salvar detecção: {e}")
     

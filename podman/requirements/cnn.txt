@@ -1,0 +1,22 @@
+# Include base requirements
+-r base.txt
+
+# Advanced Computer Vision
+ultralytics>=8.0.0  # YOLOv8
+detectron2>=0.6  # Advanced person detection
+timm>=0.6.0  # Vision models
+albumentations>=1.3.0  # Data augmentation
+
+# Pattern Analysis
+scipy>=1.9.0
+seaborn>=0.11.0
+plotly>=5.0.0
+matplotlib>=3.5.0
+
+# Additional OCR
+paddlepaddle>=2.4.0
+paddleocr>=2.6.0
+
+# Text Analysis
+fuzzywuzzy>=0.18.0
+python-Levenshtein>=0.12.0 
