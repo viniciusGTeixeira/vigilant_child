@@ -1,11 +1,22 @@
-FROM minio/minio:RELEASE.2023-09-07T02-05-02Z
+FROM minio/minio:RELEASE.2024-01-18T22-51-28Z
 
-# Set MinIO root credentials
-ENV MINIO_ROOT_USER=minioadmin
-ENV MINIO_ROOT_PASSWORD=minioadmin
+# Argumentos para configuração
+ARG MINIO_ROOT_USER=bigbrother
+ARG MINIO_ROOT_PASSWORD=bigbrother
 
-# Expose MinIO ports
+# Variáveis de ambiente
+ENV MINIO_ROOT_USER=${MINIO_ROOT_USER}
+ENV MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+ENV MINIO_PROMETHEUS_AUTH_TYPE=public
+
+# Copiar script de inicialização
+COPY buckets.json /data/config/buckets.json
+
+# Expor portas (API e Console)
 EXPOSE 9000 9001
 
-# Start MinIO in server mode
+# Configurar volume
+VOLUME ["/data"]
+
+# Comando para iniciar o MinIO
 CMD ["server", "/data", "--console-address", ":9001"] 

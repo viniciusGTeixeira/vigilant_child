@@ -2,23 +2,57 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
 scrape_configs:
+  # Prometheus próprio
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'fastapi'
+  # Big Brother API
+  - job_name: 'bigbrother-api'
     static_configs:
       - targets: ['fastapi:8000']
+    metrics_path: '/api/v1/monitoring/metrics'
+    scrape_interval: 5s
 
-  - job_name: 'celery'
+  # MinIO
+  - job_name: 'minio'
     static_configs:
-      - targets: ['celery:8888']
+      - targets: ['minio:9000']
+    metrics_path: '/minio/v2/metrics/cluster'
+    scrape_interval: 30s
 
+  # MLflow
   - job_name: 'mlflow'
     static_configs:
       - targets: ['mlflow:5000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
 
+  # PostgreSQL (se tiver exporter)
   - job_name: 'postgres'
     static_configs:
-      - targets: ['postgres-exporter:9187'] 
+      - targets: ['postgres:5432']
+    scrape_interval: 30s
+
+  # Kafka (se tiver exporter)
+  - job_name: 'kafka'
+    static_configs:
+      - targets: ['kafka:9092']
+    scrape_interval: 30s
+
+  # Node Exporter (se disponível)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+    scrape_interval: 30s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093 

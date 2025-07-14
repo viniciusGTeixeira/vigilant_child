@@ -3,95 +3,101 @@
         {
             "name": "raw-images",
             "policy": "private",
-            "quota": {
-                "enabled": true,
-                "quota_type": "hard",
-                "amount": "500GB"
+            "quota": null,
+            "retention": {
+                "mode": "compliance",
+                "validity": "30d"
             },
-            "lifecycle_rules": [
-                {
-                    "id": "expire-old-images",
-                    "enabled": true,
-                    "expiry_days": 30,
-                    "prefix": ""
-                }
-            ],
             "description": "Imagens brutas das câmeras"
         },
         {
             "name": "processed-images",
             "policy": "private",
-            "quota": {
-                "enabled": true,
-                "quota_type": "hard",
-                "amount": "1TB"
+            "quota": null,
+            "retention": {
+                "mode": "compliance",
+                "validity": "90d"
             },
-            "lifecycle_rules": [
-                {
-                    "id": "expire-old-processed",
-                    "enabled": true,
-                    "expiry_days": 90,
-                    "prefix": ""
-                }
-            ],
-            "description": "Imagens processadas e anotadas"
+            "description": "Imagens após processamento"
         },
         {
             "name": "models",
             "policy": "private",
-            "versioning": true,
-            "quota": {
-                "enabled": true,
-                "quota_type": "hard",
-                "amount": "50GB"
+            "quota": null,
+            "retention": {
+                "mode": "governance",
+                "validity": "365d"
             },
             "description": "Modelos treinados e checkpoints"
         },
         {
             "name": "reports",
             "policy": "private",
-            "quota": {
-                "enabled": true,
-                "quota_type": "hard",
-                "amount": "100GB"
+            "quota": null,
+            "retention": {
+                "mode": "compliance",
+                "validity": "180d"
             },
-            "lifecycle_rules": [
-                {
-                    "id": "archive-old-reports",
-                    "enabled": true,
-                    "transition_days": 30,
-                    "transition_storage": "ARCHIVE",
-                    "prefix": ""
-                }
-            ],
             "description": "Relatórios e análises geradas"
         }
     ],
     "policies": {
-        "raw-images": {
-            "read": ["analyzer-service"],
-            "write": ["camera-service"]
-        },
-        "processed-images": {
-            "read": ["web-service", "report-service"],
-            "write": ["analyzer-service"]
-        },
-        "models": {
-            "read": ["analyzer-service", "training-service"],
-            "write": ["training-service"]
-        },
-        "reports": {
-            "read": ["web-service"],
-            "write": ["report-service", "analyzer-service"]
+        "private": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "AWS": ["arn:aws:iam::*:root"]
+                    },
+                    "Action": [
+                        "s3:GetBucketLocation",
+                        "s3:ListBucket",
+                        "s3:ListBucketMultipartUploads"
+                    ],
+                    "Resource": ["arn:aws:s3:::*"]
+                },
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "AWS": ["arn:aws:iam::*:root"]
+                    },
+                    "Action": [
+                        "s3:GetObject",
+                        "s3:PutObject",
+                        "s3:DeleteObject",
+                        "s3:ListMultipartUploadParts",
+                        "s3:AbortMultipartUpload"
+                    ],
+                    "Resource": ["arn:aws:s3:::*/*"]
+                }
+            ]
         }
     },
-    "retention": {
-        "raw-images": "30d",
-        "processed-images": "90d",
-        "models": "unlimited",
-        "reports": {
-            "hot": "30d",
-            "archive": "1y"
-        }
+    "lifecycle_rules": {
+        "raw-images": [
+            {
+                "id": "expire-old-raw-images",
+                "status": "Enabled",
+                "filter": {
+                    "prefix": ""
+                },
+                "expiration": {
+                    "days": 30
+                }
+            }
+        ],
+        "processed-images": [
+            {
+                "id": "expire-old-processed-images",
+                "status": "Enabled",
+                "filter": {
+                    "prefix": ""
+                },
+                "expiration": {
+                    "days": 90
+                }
+            }
+        ]
     }
 } 

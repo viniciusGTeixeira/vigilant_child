@@ -171,3 +171,86 @@ performance:
   cache_face_encodings: true
   batch_processing: false
   low_memory_mode: false
+
+# Configurações do Kafka
+kafka:
+  bootstrap_servers: 'kafka:9092'
+  topics:
+    raw_detections: 'raw-detections'
+    analyzed_events: 'analyzed-events'
+    pattern_alerts: 'pattern-alerts'
+    system_metrics: 'system-metrics'
+  consumer_groups:
+    analyzer_group: 'analyzer-group'
+    pattern_detector: 'pattern-detector'
+    alert_processor: 'alert-processor'
+    metrics_collector: 'metrics-collector'
+  batch_size: 100
+  linger_ms: 10
+  compression_type: 'gzip'
+  max_request_size: 10485760  # 10MB
+  max_in_flight_requests_per_connection: 5
+  retries: 3
+  retry_backoff_ms: 100
+
+# Configurações do MinIO
+minio:
+  endpoint: 'minio:9000'
+  access_key: '${MINIO_ACCESS_KEY:-bigbrother}'
+  secret_key: '${MINIO_SECRET_KEY:-bigbrother}'
+  secure: false
+  buckets:
+    raw_images: 'raw-images'
+    processed_images: 'processed-images'
+    models: 'models'
+    reports: 'reports'
+  retention:
+    raw_images: '30d'
+    processed_images: '90d'
+    models: '365d'
+    reports: '180d'
+  compression:
+    enabled: true
+    format: 'jpg'
+    quality: 85
+  max_pool_size: 10
+  connect_timeout: 10
+  read_timeout: 30
+
+# Configurações do MLflow
+mlflow:
+  tracking_uri: 'http://mlflow:5000'
+  experiment_name: 'bigbrother-cnn'
+  artifact_location: 's3://models/'
+  backend_store_uri: 'postgresql://bigbrother:bigbrother@postgres:5432/bigbrother'
+  
+  # Configurações de logging
+  auto_log: true
+  log_models: true
+  log_artifacts: true
+  log_metrics: true
+  log_params: true
+  
+  # Configurações de registro de modelo
+  model_registry:
+    default_stage: 'Development'
+    auto_register: true
+    
+  # Tags padrão para experimentos
+  default_tags:
+    project: 'bigbrother'
+    version: '1.0.0'
+    environment: 'development'
+    
+  # Configurações de métricas
+  metrics:
+    log_frequency: 10  # A cada 10 epochs
+    log_system_metrics: true
+    log_gpu_metrics: true
+    
+  # Configurações de artifacts
+  artifacts:
+    log_model_checkpoints: true
+    log_training_plots: true
+    log_confusion_matrix: true
+    log_feature_importance: true

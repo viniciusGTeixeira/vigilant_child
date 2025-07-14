@@ -1,22 +1,18 @@
 """
-Analyzer para análise de padrões comportamentais e detecção de mudanças
-Monitora trajetos, horários de almoço, acessos a áreas e comportamentos incomuns
+Analyzer para detecção de padrões comportamentais
+Utiliza Cassandra para armazenamento de séries temporais
 """
 
-import numpy as np
-import pandas as pd
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
-import json
-from collections import defaultdict, deque
+from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
-import psycopg2
-from psycopg2.extras import Json
-import os
-import yaml
-
-from .base_analyzer import BaseAnalyzer
-
+import json
+from cassandra.cluster import Cluster, Session
+from cassandra.query import BatchStatement
+from cassandra.policies import RoundRobinPolicy
+from cassandra.auth import PlainTextAuthProvider
+import numpy as np
+from collections import defaultdict
 
 @dataclass
 class DetectionRecord:
@@ -29,139 +25,125 @@ class DetectionRecord:
     face_info: Dict[str, Any]
     badge_info: Dict[str, Any]
 
-
 class PatternAnalyzer:
     """
-    Analyzer especializado em análise de padrões comportamentais
-    
-    Funcionalidades:
-    - Análise de trajetos e rotas usuais
-    - Detecção de mudanças em horários de almoço
-    - Monitoramento de acesso a áreas restritas
-    - Identificação de comportamentos atípicos
-    - Análise temporal de presença
-    - Detecção de padrões sociais (agrupamentos)
+    Analyzer especializado em detecção de padrões comportamentais
+    Utiliza Cassandra para armazenamento eficiente de séries temporais
     """
     
     def __init__(self, config: Dict[str, Any]):
+        """
+        Inicializa o analyzer com configurações
+        """
         self.config = config
-        self.detection_history = deque(maxlen=10000)  # Histórico limitado em memória
-        self.employee_patterns = defaultdict(dict)
-        self.location_patterns = defaultdict(dict)
-        
-        # Configurações específicas para padrões
-        self.pattern_config = config.get('analyzers', {}).get('patterns', {
-            'min_pattern_occurrences': 5,
-            'pattern_window_days': 30,
-            'lunch_time_variance_threshold': 30,  # minutos
-            'route_deviation_threshold': 0.7,
-            'restricted_areas': ['server_room', 'management', 'finance'],
-            'social_distance_threshold': 2.0,  # metros
-            'behavior_change_threshold': 0.3
+        self.cassandra_config = config.get('cassandra', {
+            'hosts': ['cassandra'],
+            'port': 9042,
+            'keyspace': 'bigbrother',
+            'username': 'cassandra',
+            'password': 'cassandra'
         })
-        
-        # Inicializar conexão com banco de dados
+        self.session = None
         self._init_database()
     
-    def _get_db_connection(self):
+    def _get_db_connection(self) -> Session:
         """
-        Cria uma nova conexão com o banco de dados PostgreSQL
+        Estabelece conexão com o Cassandra
         """
-        db_config = self.config.get('database', {})
-        return psycopg2.connect(
-            host=db_config.get('host', 'localhost'),
-            port=db_config.get('port', 5432),
-            dbname=db_config.get('name', 'bigbrother'),
-            user=db_config.get('user'),
-            password=db_config.get('password')
-        )
-    
-    def _init_database(self):
-        """
-        Inicializa banco de dados PostgreSQL para armazenar histórico de padrões
-        """
-        try:
-            with self._get_db_connection() as conn:
-                with conn.cursor() as cur:
-                    # Criar tabela de detecções
-                    cur.execute('''
-                        CREATE TABLE IF NOT EXISTS detections (
-                            id SERIAL PRIMARY KEY,
-                            timestamp TIMESTAMP NOT NULL,
-                            employee_id VARCHAR(50),
-                            location VARCHAR(100) NOT NULL,
-                            confidence FLOAT,
-                            attributes JSONB,
-                            face_info JSONB,
-                            badge_info JSONB
-                        )
-                    ''')
-                    
-                    # Criar tabela de padrões
-                    cur.execute('''
-                        CREATE TABLE IF NOT EXISTS patterns (
-                            id SERIAL PRIMARY KEY,
-                            employee_id VARCHAR(50) NOT NULL,
-                            pattern_type VARCHAR(50) NOT NULL,
-                            pattern_data JSONB NOT NULL,
-                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                            confidence FLOAT
-                        )
-                    ''')
-                    
-                    # Criar tabela de anomalias
-                    cur.execute('''
-                        CREATE TABLE IF NOT EXISTS anomalies (
-                            id SERIAL PRIMARY KEY,
-                            timestamp TIMESTAMP NOT NULL,
-                            employee_id VARCHAR(50),
-                            anomaly_type VARCHAR(50) NOT NULL,
-                            description TEXT,
-                            severity VARCHAR(20),
-                            pattern_data JSONB
-                        )
-                    ''')
-                    
-                    # Criar índices para performance
-                    cur.execute('CREATE INDEX IF NOT EXISTS idx_detections_timestamp ON detections(timestamp)')
-                    cur.execute('CREATE INDEX IF NOT EXISTS idx_detections_employee ON detections(employee_id)')
-                    cur.execute('CREATE INDEX IF NOT EXISTS idx_patterns_employee ON patterns(employee_id)')
-                
-                conn.commit()
-            print("Banco de dados de padrões inicializado")
+        if not self.session:
+            auth_provider = PlainTextAuthProvider(
+                username=self.cassandra_config['username'],
+                password=self.cassandra_config['password']
+            )
             
-        except Exception as e:
-            print(f"Erro ao inicializar banco de dados: {e}")
+            cluster = Cluster(
+                contact_points=self.cassandra_config['hosts'],
+                port=self.cassandra_config['port'],
+                auth_provider=auth_provider,
+                load_balancing_policy=RoundRobinPolicy()
+            )
+            
+            self.session = cluster.connect(self.cassandra_config['keyspace'])
+            
+            # Preparar statements comuns
+            self._prepare_statements()
+        
+        return self.session
+    
+    def _prepare_statements(self):
+        """
+        Prepara statements CQL para melhor performance
+        """
+        self.insert_detection = self.session.prepare("""
+            INSERT INTO detections (
+                detection_date,
+                detection_time,
+                employee_id,
+                location,
+                confidence,
+                attributes,
+                face_info,
+                badge_info
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """)
+        
+        self.insert_pattern = self.session.prepare("""
+            INSERT INTO temporal_patterns (
+                employee_id,
+                pattern_date,
+                pattern_type,
+                pattern_data,
+                confidence,
+                created_at,
+                updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        """)
+        
+        self.insert_anomaly = self.session.prepare("""
+            INSERT INTO anomalies (
+                anomaly_date,
+                anomaly_time,
+                employee_id,
+                anomaly_type,
+                description,
+                severity,
+                pattern_data
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        """)
     
     def add_detection(self, detection_data: Dict[str, Any]) -> bool:
         """
-        Adiciona nova detecção ao histórico para análise de padrões
+        Adiciona nova detecção ao sistema
         """
         try:
-            # Criar registro de detecção
+            session = self._get_db_connection()
+            
+            # Criar record
             record = DetectionRecord(
-                timestamp=datetime.fromisoformat(detection_data['timestamp'].replace('Z', '+00:00')),
-                employee_id=detection_data.get('employee_id', 'unknown'),
-                location=detection_data.get('location', 'unknown'),
+                timestamp=datetime.now() if 'timestamp' not in detection_data 
+                    else detection_data['timestamp'],
+                employee_id=detection_data.get('employee_id', ''),
+                location=detection_data.get('location', ''),
                 confidence=detection_data.get('confidence', 0.0),
                 attributes=detection_data.get('attributes', {}),
                 face_info=detection_data.get('face_info', {}),
                 badge_info=detection_data.get('badge_info', {})
             )
             
-            # Adicionar ao histórico em memória
-            self.detection_history.append(record)
-            
-            # Salvar no banco de dados
-            self._save_detection_to_db(record)
-            
-            # Atualizar padrões do funcionário
-            if record.employee_id != 'unknown':
-                self._update_employee_patterns(record)
-            
-            # Atualizar padrões de localização
-            self._update_location_patterns(record)
+            # Inserir detecção
+            session.execute(
+                self.insert_detection,
+                (
+                    record.timestamp.date(),
+                    record.timestamp,
+                    record.employee_id,
+                    record.location,
+                    record.confidence,
+                    record.attributes,
+                    record.face_info,
+                    record.badge_info
+                )
+            )
             
             return True
             
@@ -172,148 +154,235 @@ class PatternAnalyzer:
     def analyze_patterns(self, employee_id: str = None, 
                         time_window_hours: int = 24) -> Dict[str, Any]:
         """
-        Analisa padrões comportamentais para um funcionário ou geral
+        Analisa padrões comportamentais
         """
-        results = {
-            'timestamp': datetime.now().isoformat(),
-            'employee_id': employee_id,
-            'time_window_hours': time_window_hours,
-            'patterns_detected': {},
-            'anomalies': [],
-            'behavioral_changes': [],
-            'risk_assessment': {},
-            'recommendations': []
-        }
-        
         try:
-            # Obter dados relevantes
+            # Obter detecções recentes
             recent_detections = self._get_recent_detections(employee_id, time_window_hours)
+            
+            if not recent_detections:
+                return {"error": "Sem detecções no período especificado"}
+            
+            # Obter padrões históricos
             historical_patterns = self._get_historical_patterns(employee_id)
             
-            if len(recent_detections) == 0:
-                results['status'] = 'no_data'
-                return results
+            # Analisar padrões temporais
+            temporal_analysis = self._analyze_temporal_patterns(recent_detections)
             
-            # Análise de padrões temporais
-            temporal_patterns = self._analyze_temporal_patterns(recent_detections)
-            results['patterns_detected']['temporal'] = temporal_patterns
+            # Analisar padrões espaciais
+            spatial_analysis = self._analyze_spatial_patterns(recent_detections)
             
-            # Análise de padrões espaciais (trajetos)
-            spatial_patterns = self._analyze_spatial_patterns(recent_detections)
-            results['patterns_detected']['spatial'] = spatial_patterns
+            # Detectar mudanças comportamentais
+            behavioral_changes = self._detect_behavioral_changes(
+                recent_detections, historical_patterns
+            )
             
-            # Análise de mudanças comportamentais
-            if historical_patterns:
-                behavioral_changes = self._detect_behavioral_changes(
-                    recent_detections, historical_patterns
-                )
-                results['behavioral_changes'] = behavioral_changes
-            
-            # Detecção de anomalias
+            # Detectar anomalias
             anomalies = self._detect_pattern_anomalies(recent_detections, employee_id)
-            results['anomalies'] = anomalies
             
-            # Análise de acesso a áreas restritas
-            restricted_access = self._analyze_restricted_access(recent_detections)
-            if restricted_access:
-                results['anomalies'].extend(restricted_access)
-            
-            # Análise social (interações)
+            # Analisar padrões sociais
             social_patterns = self._analyze_social_patterns(recent_detections)
-            results['patterns_detected']['social'] = social_patterns
             
-            # Avaliação de risco
-            risk_assessment = self._assess_behavioral_risk(results)
-            results['risk_assessment'] = risk_assessment
+            # Avaliar risco comportamental
+            risk_assessment = self._assess_behavioral_risk({
+                'temporal': temporal_analysis,
+                'spatial': spatial_analysis,
+                'changes': behavioral_changes,
+                'anomalies': anomalies,
+                'social': social_patterns
+            })
             
-            # Recomendações
-            recommendations = self._generate_recommendations(results)
-            results['recommendations'] = recommendations
+            # Gerar recomendações
+            recommendations = self._generate_recommendations({
+                'risk': risk_assessment,
+                'changes': behavioral_changes,
+                'anomalies': anomalies
+            })
+            
+            return {
+                'temporal_patterns': temporal_analysis,
+                'spatial_patterns': spatial_analysis,
+                'behavioral_changes': behavioral_changes,
+                'anomalies': anomalies,
+                'social_patterns': social_patterns,
+                'risk_assessment': risk_assessment,
+                'recommendations': recommendations
+            }
             
         except Exception as e:
             print(f"Erro na análise de padrões: {e}")
-            results['error'] = str(e)
-        
-        return results
+            return {"error": str(e)}
     
     def _get_recent_detections(self, employee_id: str = None, 
                               hours: int = 24) -> List[DetectionRecord]:
         """
-        Obtém detecções recentes do banco de dados
+        Obtém detecções recentes do Cassandra
         """
         try:
-            cutoff_time = datetime.now() - timedelta(hours=hours)
+            session = self._get_db_connection()
             
-            with self._get_db_connection() as conn:
-                with conn.cursor() as cur:
-                    if employee_id:
-                        cur.execute('''
-                            SELECT timestamp, employee_id, location, confidence, 
-                                   attributes, face_info, badge_info
-                            FROM detections 
-                            WHERE employee_id = %s AND timestamp > %s
-                            ORDER BY timestamp DESC
-                        ''', (employee_id, cutoff_time))
-                    else:
-                        cur.execute('''
-                            SELECT timestamp, employee_id, location, confidence, 
-                                   attributes, face_info, badge_info
-                            FROM detections 
-                            WHERE timestamp > %s
-                            ORDER BY timestamp DESC
-                        ''', (cutoff_time,))
-                    
-                    records = []
-                    for row in cur.fetchall():
-                        record = DetectionRecord(
-                            timestamp=row[0],
-                            employee_id=row[1] or 'unknown',
-                            location=row[2],
-                            confidence=row[3],
-                            attributes=row[4],
-                            face_info=row[5],
-                            badge_info=row[6]
-                        )
-                        records.append(record)
-                    
-                    return records
-                
+            # Calcular intervalo de datas
+            end_date = datetime.now()
+            start_date = end_date - timedelta(hours=hours)
+            
+            # Query base
+            if employee_id:
+                query = """
+                    SELECT * FROM detections 
+                    WHERE detection_date >= %s 
+                    AND detection_date <= %s 
+                    AND employee_id = %s
+                """
+                params = [start_date.date(), end_date.date(), employee_id]
+            else:
+                query = """
+                    SELECT * FROM detections 
+                    WHERE detection_date >= %s 
+                    AND detection_date <= %s
+                """
+                params = [start_date.date(), end_date.date()]
+            
+            rows = session.execute(query, params)
+            
+            detections = []
+            for row in rows:
+                detection = DetectionRecord(
+                    timestamp=row.detection_time,
+                    employee_id=row.employee_id,
+                    location=row.location,
+                    confidence=row.confidence,
+                    attributes=row.attributes,
+                    face_info=row.face_info,
+                    badge_info=row.badge_info
+                )
+                detections.append(detection)
+            
+            return sorted(detections, key=lambda x: x.timestamp)
+            
         except Exception as e:
             print(f"Erro ao obter detecções recentes: {e}")
             return []
     
     def _get_historical_patterns(self, employee_id: str = None) -> Dict[str, Any]:
         """
-        Obtém padrões históricos do funcionário
+        Obtém padrões históricos do funcionário do Cassandra
         """
         try:
             if not employee_id:
                 return {}
             
-            with self._get_db_connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute('''
-                        SELECT pattern_type, pattern_data, confidence, updated_at
-                        FROM patterns 
-                        WHERE employee_id = %s
-                        ORDER BY updated_at DESC
-                    ''', (employee_id,))
-                    
-                    patterns = {}
-                    for row in cur.fetchall():
-                        pattern_type = row[0]
-                        pattern_data = row[1]
-                        patterns[pattern_type] = {
-                            'data': pattern_data,
-                            'confidence': row[2],
-                            'updated_at': row[3]
-                        }
-                    
-                    return patterns
-                
+            session = self._get_db_connection()
+            
+            # Buscar padrões dos últimos 30 dias
+            end_date = datetime.now().date()
+            start_date = end_date - timedelta(days=30)
+            
+            query = """
+                SELECT * FROM temporal_patterns 
+                WHERE employee_id = %s 
+                AND pattern_date >= %s 
+                AND pattern_date <= %s
+            """
+            rows = session.execute(query, [employee_id, start_date, end_date])
+            
+            patterns = {}
+            for row in rows:
+                pattern_type = row.pattern_type
+                if pattern_type not in patterns:
+                    patterns[pattern_type] = []
+                patterns[pattern_type].append({
+                    'date': row.pattern_date,
+                    'data': row.pattern_data,
+                    'confidence': row.confidence
+                })
+            
+            return patterns
+            
         except Exception as e:
             print(f"Erro ao obter padrões históricos: {e}")
             return {}
+
+    def _save_anomaly(self, anomaly: Dict[str, Any]):
+        """
+        Salva anomalia detectada no Cassandra
+        """
+        try:
+            session = self._get_db_connection()
+            
+            now = datetime.now()
+            session.execute(
+                self.insert_anomaly,
+                (
+                    now.date(),
+                    now,
+                    anomaly.get('employee_id', ''),
+                    anomaly['type'],
+                    anomaly.get('description', ''),
+                    anomaly.get('severity', 'low'),
+                    anomaly.get('pattern_data', {})
+                )
+            )
+            
+        except Exception as e:
+            print(f"Erro ao salvar anomalia: {e}")
+
+    def _save_metrics(self, metrics: Dict[str, Any]):
+        """
+        Salva métricas agregadas no Cassandra
+        """
+        try:
+            session = self._get_db_connection()
+            
+            # Preparar batch de métricas
+            batch = BatchStatement()
+            now = datetime.now()
+            
+            for metric_type, value in metrics.items():
+                batch.add(
+                    """
+                    UPDATE hourly_metrics 
+                    SET value = value + %s 
+                    WHERE metric_date = %s 
+                    AND hour = %s 
+                    AND metric_type = %s
+                    """,
+                    (value, now.date(), now.hour, metric_type)
+                )
+            
+            session.execute(batch)
+            
+        except Exception as e:
+            print(f"Erro ao salvar métricas: {e}")
+
+    def _cleanup_old_data(self, days: int = 90):
+        """
+        Limpa dados antigos do Cassandra
+        """
+        try:
+            session = self._get_db_connection()
+            
+            cutoff_date = datetime.now().date() - timedelta(days=days)
+            
+            # Limpar detecções antigas
+            session.execute(
+                "DELETE FROM detections WHERE detection_date < %s",
+                [cutoff_date]
+            )
+            
+            # Limpar padrões antigos
+            session.execute(
+                "DELETE FROM temporal_patterns WHERE pattern_date < %s",
+                [cutoff_date]
+            )
+            
+            # Limpar anomalias antigas
+            session.execute(
+                "DELETE FROM anomalies WHERE anomaly_date < %s",
+                [cutoff_date]
+            )
+            
+        except Exception as e:
+            print(f"Erro na limpeza de dados: {e}")
     
     def _analyze_temporal_patterns(self, detections: List[DetectionRecord]) -> Dict[str, Any]:
         """
@@ -1152,69 +1221,70 @@ class PatternAnalyzer:
     
     def _save_detection_to_db(self, record: DetectionRecord):
         """
-        Salva detecção no banco de dados
+        Salva detecção no Cassandra
         """
         try:
-            with self._get_db_connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute('''
-                        INSERT INTO detections 
-                        (timestamp, employee_id, location, confidence, attributes, face_info, badge_info)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    ''', (
-                        record.timestamp,
-                        record.employee_id,
-                        record.location,
-                        record.confidence,
-                        Json(record.attributes),
-                        Json(record.face_info),
-                        Json(record.badge_info)
-                    ))
-                conn.commit()
+            session = self._get_db_connection()
+            
+            # Inserir na tabela de detecções
+            session.execute(
+                self.insert_detection,
+                (
+                    record.timestamp.date(),
+                    record.timestamp,
+                    record.employee_id,
+                    record.location,
+                    record.confidence,
+                    record.attributes,
+                    record.face_info,
+                    record.badge_info
+                )
+            )
+            
         except Exception as e:
             print(f"Erro ao salvar detecção: {e}")
     
     def _update_employee_patterns(self, record: DetectionRecord):
         """
-        Atualiza padrões do funcionário baseado em nova detecção
+        Atualiza padrões do funcionário no Cassandra
         """
         try:
-            # Implementar lógica de atualização incremental de padrões
-            # Por simplicidade, apenas atualizar contadores em memória
-            employee_id = record.employee_id
+            session = self._get_db_connection()
             
-            if employee_id not in self.employee_patterns:
-                self.employee_patterns[employee_id] = {
-                    'locations': defaultdict(int),
-                    'hourly_activity': defaultdict(int),
-                    'daily_patterns': defaultdict(list)
-                }
-            
-            patterns = self.employee_patterns[employee_id]
-            patterns['locations'][record.location] += 1
-            patterns['hourly_activity'][record.timestamp.hour] += 1
+            # Atualizar padrões temporais
+            session.execute(
+                self.insert_pattern,
+                (
+                    record.employee_id,
+                    record.timestamp.date(),
+                    'temporal',
+                    {'last_detection': record.timestamp.isoformat()},
+                    record.confidence,
+                    datetime.now(),
+                    datetime.now()
+                )
+            )
             
         except Exception as e:
-            print(f"Erro ao atualizar padrões do funcionário: {e}")
+            print(f"Erro ao atualizar padrões: {e}")
     
     def _update_location_patterns(self, record: DetectionRecord):
         """
-        Atualiza padrões de localização
+        Atualiza padrões de localização no Cassandra
         """
         try:
-            location = record.location
+            session = self._get_db_connection()
             
-            if location not in self.location_patterns:
-                self.location_patterns[location] = {
-                    'hourly_usage': defaultdict(int),
-                    'daily_usage': defaultdict(int),
-                    'total_detections': 0
-                }
-            
-            patterns = self.location_patterns[location]
-            patterns['hourly_usage'][record.timestamp.hour] += 1
-            patterns['daily_usage'][record.timestamp.weekday()] += 1
-            patterns['total_detections'] += 1
+            # Atualizar métricas por hora
+            hour = record.timestamp.hour
+            session.execute("""
+                UPDATE hourly_metrics 
+                SET value = value + 1 
+                WHERE metric_date = %s 
+                AND hour = %s 
+                AND metric_type = 'location_count'
+                AND location = %s
+            """, (record.timestamp.date(), hour, record.location))
             
         except Exception as e:
             print(f"Erro ao atualizar padrões de localização: {e}")

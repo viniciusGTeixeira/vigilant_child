@@ -1,0 +1,28 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: 5s
+      queryTimeout: 60s
+      httpMethod: POST
+    secureJsonData: {}
+    version: 1
+
+  - name: BigBrother API
+    type: prometheus
+    access: proxy
+    url: http://fastapi:8000
+    isDefault: false
+    editable: true
+    jsonData:
+      timeInterval: 10s
+      queryTimeout: 30s
+      httpMethod: GET
+    secureJsonData: {}
+    version: 1 

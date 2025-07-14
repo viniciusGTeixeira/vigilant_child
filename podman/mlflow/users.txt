@@ -1,0 +1,12 @@
+# Arquivo de usuários para autenticação básica do MLflow
+# Formato: username:password_hash
+# Para gerar hash: python -c "import hashlib; print(hashlib.sha256('password'.encode()).hexdigest())"
+
+# Usuário admin (senha: admin123)
+admin:240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9
+
+# Usuário mlflow (senha: mlflow123)
+mlflow:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+
+# Usuário developer (senha: dev123)
+developer:b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342 

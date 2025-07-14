@@ -45,4 +45,34 @@ python-Levenshtein>=0.12.0
 # Utilitários adicionais
 click>=8.0.0  # CLI
 rich>=12.0.0  # Output colorido
-loguru>=0.6.0  # Logging avançado 
+loguru>=0.6.0  # Logging avançado
+
+# Integração com Kafka e MinIO
+kafka-python>=2.0.0  # Cliente Kafka
+minio>=7.2.0  # Cliente MinIO
+confluent-kafka>=2.3.0  # Cliente Kafka otimizado (opcional)
+avro-python3>=1.10.0  # Serialização Avro para Kafka
+fastavro>=1.9.0  # Serialização Avro otimizada
+msgpack>=1.0.0  # Serialização binária eficiente
+
+# MLflow para tracking de experimentos
+mlflow>=2.8.0  # Tracking de experimentos
+boto3>=1.26.0  # Cliente AWS S3 (para MinIO)
+botocore>=1.29.0  # Core do boto3
+
+# API FastAPI
+fastapi>=0.104.0  # Framework web
+uvicorn[standard]>=0.24.0  # Servidor ASGI
+pydantic>=2.4.0  # Validação de dados
+python-multipart>=0.0.6  # Upload de arquivos
+python-jose[cryptography]>=3.3.0  # JWT tokens
+passlib[bcrypt]>=1.7.4  # Hash de senhas
+python-dotenv>=1.0.0  # Variáveis de ambiente
+starlette>=0.27.0  # Framework base
+httpx>=0.25.0  # Cliente HTTP assíncrono
+aiofiles>=23.2.0  # Operações de arquivo assíncronas
+psutil>=5.9.0  # Informações do sistema
+
+# Monitoramento com Prometheus
+prometheus-client>=0.19.0  # Cliente Prometheus
+GPUtil>=1.4.0  # Monitoramento GPU (opcional) 

@@ -1,6 +1,6 @@
 """
 Analyzer para análise de horários e conformidade com rotinas de trabalho
-Integra com dados de horários CSV e rotinas JSON
+Integra com PostgreSQL para dados de horários e rotinas
 """
 
 import pandas as pd
@@ -10,11 +10,15 @@ import pytz
 from typing import Dict, Any, List, Optional, Tuple
 import json
 import re
+import torch
+import sqlalchemy as sa
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 
 from .base_analyzer import BaseAnalyzer
 
 
-class ScheduleAnalyzer:
+class ScheduleAnalyzer(BaseAnalyzer):
     """
     Analyzer especializado em análise de horários e conformidade
     
@@ -27,10 +31,8 @@ class ScheduleAnalyzer:
     - Análise de permanência em áreas
     """
     
-    def __init__(self, config: Dict[str, Any]):
-        self.config = config
-        self.schedule_data = None
-        self.routines_data = None
+    def __init__(self, config: Dict[str, Any], device: torch.device):
+        super().__init__(config, device)
         self.timezone = pytz.timezone(config.get('timezone', 'America/Sao_Paulo'))
         
         # Configurações específicas para horários
@@ -44,24 +46,123 @@ class ScheduleAnalyzer:
             'holiday_work_alert': True
         })
         
-    def load_data(self, horarios_path: str, rotinas_path: str) -> bool:
+        # Configuração do PostgreSQL
+        db_config = config.get('database', {})
+        self.db_url = f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['name']}"
+        self.engine = sa.create_engine(
+            self.db_url,
+            pool_size=db_config.get('pool_size', 10),
+            max_overflow=db_config.get('max_overflow', 20),
+            pool_timeout=db_config.get('pool_timeout', 30),
+            pool_recycle=db_config.get('pool_recycle', 1800),
+            echo=db_config.get('echo', False)
+        )
+        self.Session = sessionmaker(bind=self.engine)
+        
+    def load_model(self, model_path: Optional[str] = None) -> bool:
         """
-        Carrega dados de horários e rotinas
+        ScheduleAnalyzer não usa modelo ML, mas precisa conectar ao banco
         """
         try:
-            # Carregar horários
-            self.schedule_data = pd.read_csv(horarios_path)
-            print(f"Carregados {len(self.schedule_data)} registros de horários")
-            
-            # Carregar rotinas
-            with open(rotinas_path, 'r', encoding='utf-8') as f:
-                self.routines_data = json.load(f)
-            print(f"Carregadas {len(self.routines_data.get('rotinas', {}))} rotinas")
-            
+            # Testar conexão com o banco
+            with self.engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            self.is_loaded = True
             return True
-            
         except Exception as e:
-            print(f"Erro ao carregar dados de horários: {e}")
+            print(f"Erro ao conectar ao PostgreSQL: {e}")
+            self.is_loaded = False
+            return False
+    
+    def analyze(self, image: torch.Tensor, metadata: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        Analisa conformidade com horários baseado em metadados
+        """
+        if not metadata or not self.is_loaded:
+            return {'error': 'Metadados ausentes ou analyzer não inicializado'}
+            
+        detection_time = metadata.get('detection_time', datetime.now())
+        employee_info = metadata.get('employee_info', {})
+        location = metadata.get('location')
+        
+        results = self.analyze_schedule_compliance(detection_time, employee_info, location)
+        
+        # Adicionar resultados ao banco
+        self._save_analysis_results(results)
+        
+        return self.postprocess_results(results)
+    
+    def get_confidence_threshold(self) -> float:
+        """
+        Retorna limiar de confiança para análise temporal
+        """
+        return 1.0 - (self.schedule_config['tolerance_minutes'] / (24 * 60))
+    
+    def _save_analysis_results(self, results: Dict[str, Any]) -> None:
+        """
+        Salva resultados da análise no PostgreSQL
+        """
+        try:
+            with self.Session() as session:
+                # Criar query de inserção
+                query = text("""
+                    INSERT INTO schedule_analysis (
+                        timestamp, employee_id, location, compliance_status,
+                        expected_status, current_status, schedule_match,
+                        risk_level, anomalies
+                    ) VALUES (
+                        :timestamp, :employee_id, :location, :compliance_status,
+                        :expected_status, :current_status, :schedule_match,
+                        :risk_level, :anomalies
+                    )
+                """)
+                
+                # Preparar dados
+                params = {
+                    'timestamp': results['timestamp'],
+                    'employee_id': results.get('employee_info', {}).get('id'),
+                    'location': results.get('location'),
+                    'compliance_status': results['compliance_status'],
+                    'expected_status': results['expected_status'],
+                    'current_status': results['current_status'],
+                    'schedule_match': results['schedule_match'],
+                    'risk_level': results['risk_level'],
+                    'anomalies': json.dumps(results['anomalies'])
+                }
+                
+                # Executar inserção
+                session.execute(query, params)
+                session.commit()
+                
+        except Exception as e:
+            print(f"Erro ao salvar resultados no PostgreSQL: {e}")
+    
+    def load_data(self) -> bool:
+        """
+        Carrega dados de horários e rotinas do PostgreSQL
+        """
+        try:
+            with self.Session() as session:
+                # Carregar horários
+                schedules = session.execute(text("""
+                    SELECT * FROM employee_schedules 
+                    WHERE active = true
+                    ORDER BY updated_at DESC
+                """))
+                self.schedule_data = pd.DataFrame(schedules)
+                
+                # Carregar rotinas
+                routines = session.execute(text("""
+                    SELECT * FROM work_routines
+                    WHERE active = true
+                    ORDER BY priority DESC
+                """))
+                self.routines_data = pd.DataFrame(routines)
+                
+                return True
+                
+        except Exception as e:
+            print(f"Erro ao carregar dados do PostgreSQL: {e}")
             return False
     
     def analyze_schedule_compliance(self, detection_time: datetime, 
@@ -111,46 +212,48 @@ class ScheduleAnalyzer:
     def _get_schedule_info(self, employee_info: Dict[str, Any] = None, 
                           location: str = None) -> Dict[str, Any]:
         """
-        Obtém informações de horário relevantes
+        Obtém informações de horário relevantes do PostgreSQL
         """
         schedule_info = {}
         
         try:
-            if self.schedule_data is None:
-                return schedule_info
-            
-            # Filtrar por localização se disponível
-            relevant_schedules = self.schedule_data.copy()
-            
-            if location:
-                # Tentar encontrar grade correspondente à localização
-                location_matches = relevant_schedules[
-                    relevant_schedules['Grade'].str.contains(location, case=False, na=False)
-                ]
-                if len(location_matches) > 0:
-                    relevant_schedules = location_matches
-            
-            # Se há informação do funcionário, tentar encontrar horário específico
-            if employee_info and 'name' in employee_info:
-                # Placeholder: implementar lógica de mapeamento funcionário -> grade
-                pass
-            
-            # Processar horários encontrados
-            for _, row in relevant_schedules.iterrows():
-                grade = row['Grade']
-                schedule_text = row['Horário Funcionamento']
+            with self.Session() as session:
+                # Construir query base
+                query = """
+                    SELECT es.*, g.name as grade_name, g.description
+                    FROM employee_schedules es
+                    JOIN schedule_grades g ON es.grade_id = g.id
+                    WHERE es.active = true
+                """
+                params = {}
                 
-                parsed_schedule = self._parse_schedule_text(schedule_text)
+                # Adicionar filtros
+                if location:
+                    query += " AND g.location = :location"
+                    params['location'] = location
+                    
+                if employee_info and 'id' in employee_info:
+                    query += " AND (es.employee_id = :employee_id OR es.grade_id IN (SELECT grade_id FROM employee_grades WHERE employee_id = :employee_id))"
+                    params['employee_id'] = employee_info['id']
                 
-                schedule_info[grade] = {
-                    'raw_text': schedule_text,
-                    'parsed_schedule': parsed_schedule,
-                    'messages': row.get('Mensagem', ''),
-                    'grade': grade
-                }
+                # Executar query
+                results = session.execute(text(query), params)
+                
+                # Processar resultados
+                for row in results:
+                    grade = row.grade_name
+                    schedule_info[grade] = {
+                        'grade': grade,
+                        'description': row.description,
+                        'parsed_schedule': self._parse_schedule_text(row.schedule_text),
+                        'raw_text': row.schedule_text,
+                        'messages': row.messages or '',
+                        'location': row.location,
+                        'priority': row.priority
+                    }
             
         except Exception as e:
-            print(f"Erro ao obter informações de horário: {e}")
+            print(f"Erro ao obter informações de horário do PostgreSQL: {e}")
         
         return schedule_info
     
@@ -316,40 +419,58 @@ class ScheduleAnalyzer:
     def _check_compliance(self, detection_time: datetime, expected_status: str, 
                          schedule_info: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Verifica conformidade com horário esperado
+        Verifica conformidade com horários e registra no banco
         """
-        compliance = {
-            'compliance_status': 'compliant',
-            'schedule_match': True,
-            'violation_type': None,
-            'deviation_minutes': 0
+        results = {
+            'compliance_status': 'unknown',
+            'schedule_match': False,
+            'deviation_minutes': 0,
+            'details': {}
         }
         
         try:
-            if expected_status == 'should_be_present':
-                # Funcionário deveria estar presente e está
-                compliance['compliance_status'] = 'compliant'
-                compliance['schedule_match'] = True
+            with self.Session() as session:
+                # Registrar verificação
+                query = text("""
+                    INSERT INTO schedule_checks (
+                        timestamp, expected_status, actual_status,
+                        location, employee_id, deviation_minutes
+                    ) VALUES (
+                        :timestamp, :expected_status, :actual_status,
+                        :location, :employee_id, :deviation_minutes
+                    ) RETURNING id
+                """)
                 
-            elif expected_status == 'should_be_absent':
-                # Funcionário não deveria estar presente mas está
-                compliance['compliance_status'] = 'violation'
-                compliance['schedule_match'] = False
-                compliance['violation_type'] = 'unauthorized_presence'
-                
-                # Calcular quanto tempo fora do horário
                 deviation = self._calculate_time_deviation(detection_time, schedule_info)
-                compliance['deviation_minutes'] = deviation
                 
-            else:
-                compliance['compliance_status'] = 'unknown'
-                compliance['schedule_match'] = False
-            
+                params = {
+                    'timestamp': detection_time,
+                    'expected_status': expected_status,
+                    'actual_status': 'present',
+                    'location': next(iter(schedule_info.values()))['location'] if schedule_info else None,
+                    'employee_id': None,  # TODO: Adicionar ID do funcionário
+                    'deviation_minutes': deviation
+                }
+                
+                check_id = session.execute(query, params).scalar()
+                session.commit()
+                
+                # Determinar status de conformidade
+                if expected_status == 'should_be_present':
+                    results['compliance_status'] = 'compliant'
+                    results['schedule_match'] = True
+                elif expected_status == 'should_be_absent':
+                    results['compliance_status'] = 'non_compliant'
+                    results['schedule_match'] = False
+                
+                results['deviation_minutes'] = deviation
+                results['check_id'] = check_id
+                
         except Exception as e:
             print(f"Erro ao verificar conformidade: {e}")
-            compliance['compliance_status'] = 'error'
+            results['error'] = str(e)
         
-        return compliance
+        return results
     
     def _calculate_time_deviation(self, detection_time: datetime, 
                                  schedule_info: Dict[str, Any]) -> int:
@@ -427,265 +548,355 @@ class ScheduleAnalyzer:
                                   schedule_info: Dict[str, Any],
                                   employee_info: Dict[str, Any] = None) -> List[Dict[str, Any]]:
         """
-        Detecta anomalias específicas nos horários
+        Detecta e registra anomalias de horário
         """
         anomalies = []
         
         try:
-            local_time = detection_time.astimezone(self.timezone)
-            
-            # Verificar chegada muito cedo
-            early_arrival = self._check_early_arrival(local_time, schedule_info)
+            # Verificar cada tipo de anomalia
+            early_arrival = self._check_early_arrival(detection_time, schedule_info)
             if early_arrival:
                 anomalies.append(early_arrival)
+                self._save_anomaly(early_arrival, employee_info)
             
-            # Verificar saída muito tarde
-            late_departure = self._check_late_departure(local_time, schedule_info)
+            late_departure = self._check_late_departure(detection_time, schedule_info)
             if late_departure:
                 anomalies.append(late_departure)
+                self._save_anomaly(late_departure, employee_info)
             
-            # Verificar trabalho em fim de semana
-            if self.schedule_config['weekend_work_alert']:
-                weekend_work = self._check_weekend_work(local_time, schedule_info)
-                if weekend_work:
-                    anomalies.append(weekend_work)
+            weekend_work = self._check_weekend_work(detection_time, schedule_info)
+            if weekend_work:
+                anomalies.append(weekend_work)
+                self._save_anomaly(weekend_work, employee_info)
             
-            # Verificar trabalho em feriado
-            if self.schedule_config['holiday_work_alert']:
-                holiday_work = self._check_holiday_work(local_time)
-                if holiday_work:
-                    anomalies.append(holiday_work)
+            holiday_work = self._check_holiday_work(detection_time)
+            if holiday_work:
+                anomalies.append(holiday_work)
+                self._save_anomaly(holiday_work, employee_info)
             
-            # Verificar horário de almoço atípico
-            lunch_anomaly = self._check_lunch_time_anomaly(local_time)
+            lunch_anomaly = self._check_lunch_time_anomaly(detection_time)
             if lunch_anomaly:
                 anomalies.append(lunch_anomaly)
+                self._save_anomaly(lunch_anomaly, employee_info)
             
         except Exception as e:
             print(f"Erro ao detectar anomalias: {e}")
+            anomalies.append({
+                'type': 'error',
+                'description': f'Erro na detecção de anomalias: {e}',
+                'severity': 'high'
+            })
         
         return anomalies
+
+    def _save_anomaly(self, anomaly: Dict[str, Any], 
+                      employee_info: Dict[str, Any] = None) -> None:
+        """
+        Salva anomalia detectada no PostgreSQL
+        """
+        try:
+            with self.Session() as session:
+                query = text("""
+                    INSERT INTO schedule_anomalies (
+                        timestamp, type, description, severity,
+                        employee_id, location, details
+                    ) VALUES (
+                        :timestamp, :type, :description, :severity,
+                        :employee_id, :location, :details
+                    )
+                """)
+                
+                params = {
+                    'timestamp': datetime.now(),
+                    'type': anomaly['type'],
+                    'description': anomaly['description'],
+                    'severity': anomaly['severity'],
+                    'employee_id': employee_info.get('id') if employee_info else None,
+                    'location': anomaly.get('location'),
+                    'details': json.dumps(anomaly.get('details', {}))
+                }
+                
+                session.execute(query, params)
+                session.commit()
+                
+        except Exception as e:
+            print(f"Erro ao salvar anomalia: {e}")
     
     def _check_early_arrival(self, check_time: datetime, 
                            schedule_info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
-        Verifica chegada muito cedo
+        Verifica chegada muito cedo e registra no banco
         """
         try:
+            local_time = check_time.astimezone(self.timezone)
             threshold = self.schedule_config['early_arrival_threshold']
             
-            for grade, info in schedule_info.items():
-                schedule = info['parsed_schedule']
-                weekday = check_time.weekday()
+            for grade_info in schedule_info.values():
+                schedule = grade_info['parsed_schedule']
                 
-                # Obter horário de início esperado
-                expected_start = None
-                if weekday < 5 and 'weekdays' in schedule:
-                    expected_start = schedule['weekdays'].get('start')
-                elif weekday == 5 and 'saturday' in schedule:
-                    expected_start = schedule['saturday'].get('start')
-                elif weekday == 6 and 'sunday' in schedule:
-                    expected_start = schedule['sunday'].get('start')
+                if schedule['is_24h']:
+                    continue
                 
-                if expected_start:
-                    start_time = datetime.strptime(expected_start, '%H:%M').time()
-                    current_time = check_time.time()
-                    
-                    # Calcular diferença
-                    diff_minutes = self._time_difference_minutes(current_time, start_time)
-                    
-                    if diff_minutes < -threshold:  # Chegou muito cedo
-                        return {
-                            'type': 'early_arrival',
-                            'severity': 'medium',
-                            'description': f'Chegada {abs(diff_minutes):.0f} minutos antes do horário',
-                            'expected_time': expected_start,
-                            'actual_time': current_time.strftime('%H:%M'),
-                            'grade': grade
+                # Verificar horário de entrada
+                if 'weekdays' in schedule and local_time.weekday() < 5:
+                    start_time = datetime.strptime(schedule['weekdays']['start'], '%H:%M').time()
+                elif 'saturday' in schedule and local_time.weekday() == 5:
+                    start_time = datetime.strptime(schedule['saturday']['start'], '%H:%M').time()
+                elif 'sunday' in schedule and local_time.weekday() == 6:
+                    start_time = datetime.strptime(schedule['sunday']['start'], '%H:%M').time()
+                else:
+                    continue
+                
+                # Calcular diferença em minutos
+                arrival_time = local_time.time()
+                minutes_early = self._time_difference_minutes(start_time, arrival_time)
+                
+                if minutes_early > threshold:
+                    return {
+                        'type': 'early_arrival',
+                        'description': f'Chegada {minutes_early} minutos antes do horário',
+                        'severity': 'low' if minutes_early < threshold * 2 else 'medium',
+                        'details': {
+                            'minutes_early': minutes_early,
+                            'expected_time': start_time.strftime('%H:%M'),
+                            'actual_time': arrival_time.strftime('%H:%M'),
+                            'grade': grade_info['grade'],
+                            'location': grade_info['location']
                         }
+                    }
             
         except Exception as e:
-            print(f"Erro ao verificar chegada cedo: {e}")
+            print(f"Erro ao verificar chegada antecipada: {e}")
         
         return None
-    
+
     def _check_late_departure(self, check_time: datetime, 
                             schedule_info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
-        Verifica saída muito tarde
+        Verifica saída muito tarde e registra no banco
         """
         try:
+            local_time = check_time.astimezone(self.timezone)
             threshold = self.schedule_config['late_departure_threshold']
             
-            for grade, info in schedule_info.items():
-                schedule = info['parsed_schedule']
-                weekday = check_time.weekday()
+            for grade_info in schedule_info.values():
+                schedule = grade_info['parsed_schedule']
                 
-                # Obter horário de fim esperado
-                expected_end = None
-                if weekday < 5 and 'weekdays' in schedule:
-                    expected_end = schedule['weekdays'].get('end')
-                elif weekday == 5 and 'saturday' in schedule:
-                    expected_end = schedule['saturday'].get('end')
-                elif weekday == 6 and 'sunday' in schedule:
-                    expected_end = schedule['sunday'].get('end')
+                if schedule['is_24h']:
+                    continue
                 
-                if expected_end:
-                    end_time = datetime.strptime(expected_end, '%H:%M').time()
-                    current_time = check_time.time()
-                    
-                    # Calcular diferença
-                    diff_minutes = self._time_difference_minutes(end_time, current_time)
-                    
-                    if diff_minutes < -threshold:  # Saiu muito tarde
-                        return {
-                            'type': 'late_departure',
-                            'severity': 'high',
-                            'description': f'Permanência {abs(diff_minutes):.0f} minutos após horário',
-                            'expected_time': expected_end,
-                            'actual_time': current_time.strftime('%H:%M'),
-                            'grade': grade
+                # Verificar horário de saída
+                if 'weekdays' in schedule and local_time.weekday() < 5:
+                    end_time = datetime.strptime(schedule['weekdays']['end'], '%H:%M').time()
+                elif 'saturday' in schedule and local_time.weekday() == 5:
+                    end_time = datetime.strptime(schedule['saturday']['end'], '%H:%M').time()
+                elif 'sunday' in schedule and local_time.weekday() == 6:
+                    end_time = datetime.strptime(schedule['sunday']['end'], '%H:%M').time()
+                else:
+                    continue
+                
+                # Calcular diferença em minutos
+                departure_time = local_time.time()
+                minutes_late = self._time_difference_minutes(end_time, departure_time)
+                
+                if minutes_late > threshold:
+                    return {
+                        'type': 'late_departure',
+                        'description': f'Saída {minutes_late} minutos após o horário',
+                        'severity': 'low' if minutes_late < threshold * 2 else 'medium',
+                        'details': {
+                            'minutes_late': minutes_late,
+                            'expected_time': end_time.strftime('%H:%M'),
+                            'actual_time': departure_time.strftime('%H:%M'),
+                            'grade': grade_info['grade'],
+                            'location': grade_info['location']
                         }
+                    }
             
         except Exception as e:
-            print(f"Erro ao verificar saída tarde: {e}")
+            print(f"Erro ao verificar saída tardia: {e}")
         
         return None
-    
+
     def _check_weekend_work(self, check_time: datetime, 
                           schedule_info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
-        Verifica trabalho em fim de semana não programado
+        Verifica trabalho em fim de semana e registra no banco
         """
-        try:
-            weekday = check_time.weekday()
+        if not self.schedule_config['weekend_work_alert']:
+            return None
             
-            if weekday in [5, 6]:  # Sábado ou domingo
-                has_weekend_schedule = False
-                
-                for grade, info in schedule_info.items():
-                    schedule = info['parsed_schedule']
+        try:
+            local_time = check_time.astimezone(self.timezone)
+            
+            # Verificar se é fim de semana
+            if local_time.weekday() >= 5:
+                for grade_info in schedule_info.values():
+                    schedule = grade_info['parsed_schedule']
                     
-                    if weekday == 5 and schedule.get('saturday'):
-                        has_weekend_schedule = True
-                    elif weekday == 6 and schedule.get('sunday'):
-                        has_weekend_schedule = True
-                
-                if not has_weekend_schedule:
-                    day_name = 'sábado' if weekday == 5 else 'domingo'
+                    # Se tem horário definido para o dia, não é anomalia
+                    if local_time.weekday() == 5 and 'saturday' in schedule:
+                        continue
+                    if local_time.weekday() == 6 and 'sunday' in schedule:
+                        continue
+                    
                     return {
                         'type': 'weekend_work',
-                        'severity': 'high',
-                        'description': f'Trabalho em {day_name} não programado',
-                        'day': day_name,
-                        'time': check_time.strftime('%H:%M')
+                        'description': f'Trabalho em {"sábado" if local_time.weekday() == 5 else "domingo"}',
+                        'severity': 'medium',
+                        'details': {
+                            'weekday': local_time.weekday(),
+                            'time': local_time.strftime('%H:%M'),
+                            'grade': grade_info['grade'],
+                            'location': grade_info['location']
+                        }
                     }
             
         except Exception as e:
-            print(f"Erro ao verificar trabalho fim de semana: {e}")
+            print(f"Erro ao verificar trabalho em fim de semana: {e}")
         
         return None
-    
+
     def _check_holiday_work(self, check_time: datetime) -> Optional[Dict[str, Any]]:
         """
-        Verifica trabalho em feriado
+        Verifica trabalho em feriado consultando banco de dados
         """
+        if not self.schedule_config['holiday_work_alert']:
+            return None
+            
         try:
-            # Lista de feriados nacionais (simplificada)
-            holidays_2024 = [
-                '01/01', '04/21', '05/01', '09/07', '10/12', '11/02', '11/15', '12/25'
-            ]
+            local_time = check_time.astimezone(self.timezone)
             
-            current_date = check_time.strftime('%m/%d')
-            
-            if current_date in holidays_2024:
-                return {
-                    'type': 'holiday_work',
-                    'severity': 'high',
-                    'description': 'Trabalho em feriado nacional',
-                    'date': check_time.strftime('%d/%m/%Y'),
-                    'time': check_time.strftime('%H:%M')
+            with self.Session() as session:
+                # Verificar se é feriado
+                query = text("""
+                    SELECT name, type, description
+                    FROM holidays
+                    WHERE date = :date
+                    AND (location IS NULL OR location = :location)
+                """)
+                
+                params = {
+                    'date': local_time.date(),
+                    'location': None  # TODO: Adicionar localização
                 }
+                
+                holiday = session.execute(query, params).fetchone()
+                
+                if holiday:
+                    return {
+                        'type': 'holiday_work',
+                        'description': f'Trabalho em feriado: {holiday.name}',
+                        'severity': 'high',
+                        'details': {
+                            'holiday_name': holiday.name,
+                            'holiday_type': holiday.type,
+                            'holiday_description': holiday.description,
+                            'time': local_time.strftime('%H:%M')
+                        }
+                    }
             
         except Exception as e:
-            print(f"Erro ao verificar feriado: {e}")
+            print(f"Erro ao verificar trabalho em feriado: {e}")
         
         return None
-    
+
     def _check_lunch_time_anomaly(self, check_time: datetime) -> Optional[Dict[str, Any]]:
         """
-        Verifica horário de almoço atípico
+        Verifica anomalias no horário de almoço consultando histórico
         """
         try:
-            current_time = check_time.time()
+            local_time = check_time.astimezone(self.timezone)
             
-            # Horários típicos de almoço: 11:30 - 14:30
-            typical_lunch_start = time(11, 30)
-            typical_lunch_end = time(14, 30)
-            
-            # Se está no período típico de almoço
-            if typical_lunch_start <= current_time <= typical_lunch_end:
-                # Horários mais atípicos: antes das 12:00 ou depois das 14:00
-                if current_time < time(12, 0):
-                    return {
-                        'type': 'early_lunch',
-                        'severity': 'low',
-                        'description': 'Horário de almoço muito cedo',
-                        'time': current_time.strftime('%H:%M')
+            # Verificar se está no período típico de almoço (11h-15h)
+            if 11 <= local_time.hour <= 15:
+                with self.Session() as session:
+                    # Buscar padrão histórico
+                    query = text("""
+                        SELECT 
+                            AVG(EXTRACT(HOUR FROM timestamp) * 60 + 
+                                EXTRACT(MINUTE FROM timestamp)) as avg_lunch_time,
+                            STDDEV(EXTRACT(HOUR FROM timestamp) * 60 + 
+                                  EXTRACT(MINUTE FROM timestamp)) as stddev_lunch_time
+                        FROM schedule_checks
+                        WHERE EXTRACT(HOUR FROM timestamp) BETWEEN 11 AND 15
+                        AND employee_id = :employee_id
+                        AND timestamp > CURRENT_DATE - INTERVAL '30 days'
+                    """)
+                    
+                    params = {
+                        'employee_id': None  # TODO: Adicionar ID do funcionário
                     }
-                elif current_time > time(14, 0):
-                    return {
-                        'type': 'late_lunch',
-                        'severity': 'low',
-                        'description': 'Horário de almoço muito tarde',
-                        'time': current_time.strftime('%H:%M')
-                    }
+                    
+                    stats = session.execute(query, params).fetchone()
+                    
+                    if stats and stats.avg_lunch_time and stats.stddev_lunch_time:
+                        current_minutes = local_time.hour * 60 + local_time.minute
+                        deviation = abs(current_minutes - stats.avg_lunch_time)
+                        
+                        # Se desvio > 2 desvios padrão
+                        if deviation > 2 * stats.stddev_lunch_time:
+                            return {
+                                'type': 'lunch_time_anomaly',
+                                'description': 'Horário de almoço atípico',
+                                'severity': 'low',
+                                'details': {
+                                    'usual_time': f"{int(stats.avg_lunch_time // 60):02d}:{int(stats.avg_lunch_time % 60):02d}",
+                                    'current_time': local_time.strftime('%H:%M'),
+                                    'deviation_minutes': int(deviation)
+                                }
+                            }
             
         except Exception as e:
-            print(f"Erro ao verificar horário de almoço: {e}")
+            print(f"Erro ao verificar anomalia no horário de almoço: {e}")
         
         return None
-    
+
     def _calculate_risk_level(self, results: Dict[str, Any]) -> str:
         """
-        Calcula nível de risco baseado na análise
+        Calcula nível de risco baseado em histórico de anomalias
         """
         try:
-            risk_score = 0
-            
-            # Violação de horário
-            if results.get('compliance_status') == 'violation':
-                risk_score += 3
-            
-            # Anomalias detectadas
-            anomalies = results.get('anomalies', [])
-            for anomaly in anomalies:
-                severity = anomaly.get('severity', 'low')
-                if severity == 'high':
-                    risk_score += 2
-                elif severity == 'medium':
-                    risk_score += 1
-            
-            # Desvio de tempo
-            deviation = results.get('deviation_minutes', 0)
-            if deviation > 120:  # Mais de 2 horas
-                risk_score += 2
-            elif deviation > 60:  # Mais de 1 hora
-                risk_score += 1
-            
-            # Determinar nível final
-            if risk_score >= 5:
-                return 'critical'
-            elif risk_score >= 3:
-                return 'high'
-            elif risk_score >= 1:
-                return 'medium'
-            else:
-                return 'low'
+            with self.Session() as session:
+                # Buscar histórico recente de anomalias
+                query = text("""
+                    SELECT 
+                        COUNT(*) as total_anomalies,
+                        COUNT(*) FILTER (WHERE severity = 'high') as high_severity,
+                        COUNT(*) FILTER (WHERE severity = 'medium') as medium_severity,
+                        COUNT(*) FILTER (WHERE type = :current_type) as same_type_count
+                    FROM schedule_anomalies
+                    WHERE timestamp > CURRENT_DATE - INTERVAL '7 days'
+                    AND employee_id = :employee_id
+                """)
                 
+                params = {
+                    'employee_id': results.get('employee_info', {}).get('id'),
+                    'current_type': results.get('anomalies', [{}])[0].get('type') if results.get('anomalies') else None
+                }
+                
+                stats = session.execute(query, params).fetchone()
+                
+                if stats:
+                    # Calcular score de risco
+                    risk_score = (
+                        stats.high_severity * 3 +
+                        stats.medium_severity * 2 +
+                        stats.same_type_count
+                    )
+                    
+                    # Determinar nível baseado no score
+                    if risk_score > 10:
+                        return 'high'
+                    elif risk_score > 5:
+                        return 'medium'
+                    else:
+                        return 'low'
+            
         except Exception as e:
-            print(f"Erro ao calcular risco: {e}")
-            return 'unknown'
+            print(f"Erro ao calcular nível de risco: {e}")
+        
+        return 'unknown'
     
     def get_schedule_summary(self, results: Dict[str, Any]) -> Dict[str, str]:
         """
