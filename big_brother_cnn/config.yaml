@@ -60,3 +60,106 @@ inference:
 device:
   use_cuda: true              
   num_workers: 4              
+
+# Configurações dos Analyzers Especializados
+analyzers:
+  # Face Analyzer - Reconhecimento Facial
+  face:
+    min_face_size: 50
+    confidence_threshold: 0.6
+    detection_method: 'hog'  # 'hog' ou 'cnn'
+    recognition_tolerance: 0.6
+    
+  # Attribute Analyzer - Análise de Roupas e Acessórios
+  attributes:
+    confidence_threshold: 0.7
+    min_person_size: 100
+    required_formal_score: 0.6
+    detect_uniforms: true
+    track_accessories: true
+    
+  # Badge Analyzer - Detecção de Crachás
+  badge:
+    min_badge_size: 30
+    confidence_threshold: 0.7
+    ocr_enabled: true
+    required_badge_areas: ['chest', 'neck', 'waist']
+    badge_colors: ['white', 'blue', 'red', 'yellow']
+    text_confidence_threshold: 60
+    
+  # Schedule Analyzer - Análise de Horários
+  schedule:
+    tolerance_minutes: 15
+    break_duration_max: 90  # minutos
+    overtime_threshold: 480  # minutos (8 horas)
+    early_arrival_threshold: 30  # minutos antes do horário
+    late_departure_threshold: 30  # minutos após horário
+    weekend_work_alert: true
+    holiday_work_alert: true
+    
+  # Pattern Analyzer - Análise de Padrões Comportamentais
+  patterns:
+    min_pattern_occurrences: 5
+    pattern_window_days: 30
+    lunch_time_variance_threshold: 30  # minutos
+    route_deviation_threshold: 0.7
+    restricted_areas: ['server_room', 'management', 'finance']
+    social_distance_threshold: 2.0  # metros
+    behavior_change_threshold: 0.3
+
+# Caminhos dos Modelos Treinados
+models:
+  face_encodings: "models/employee_faces.pkl"
+  attributes: "models/attribute_model.pth"
+  badge: "models/badge_detector.pth"
+  main_cnn: "checkpoints/best_model.pth"
+
+# Configurações de Localização e Timezone
+timezone: 'America/Sao_Paulo'
+pattern_db_path: 'data/patterns.db'
+
+# Sistema de Alertas
+alerts:
+  enable_real_time: true
+  email_notifications: false
+  sms_notifications: false
+  log_all_alerts: true
+  alert_history_days: 30
+
+# Políticas Corporativas
+policies:
+  mandatory_badge: true
+  dress_code_enforcement: true
+  restricted_area_monitoring: true
+  after_hours_alerts: true
+  unknown_person_alerts: true
+  
+# Níveis de Acesso por Área
+access_levels:
+  public_areas: ['lobby', 'cafe', 'restroom']
+  employee_areas: ['office', 'meeting_room', 'break_room']
+  restricted_areas: ['server_room', 'finance', 'management', 'hr']
+  high_security_areas: ['data_center', 'executive_floor']
+
+# Horários de Funcionamento Padrão
+default_schedules:
+  weekdays:
+    start: "08:00"
+    end: "18:00"
+    lunch_start: "12:00"
+    lunch_end: "13:00"
+  saturday:
+    start: "08:00"
+    end: "12:00"
+  sunday:
+    closed: true
+  holidays:
+    closed: true
+
+# Configurações de Performance
+performance:
+  max_concurrent_analyses: 5
+  image_resize_for_speed: true
+  cache_face_encodings: true
+  batch_processing: false
+  low_memory_mode: false

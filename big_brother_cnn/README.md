@@ -1,48 +1,122 @@
-# Big Brother CNN
+# Big Brother CNN - Sistema de Vigilância Inteligente Modular
 
-Sistema de vigilância inteligente usando CNN (Rede Neural Convolucional) com **PyTorch** e **ResNet-18** para detecção e classificação de funcionários, integrado com análise de horários e rotinas de trabalho.
+Sistema avançado de vigilância corporativa usando **CNNs modulares** com **PyTorch** e **analyzers especializados** para monitoramento completo de funcionários, incluindo reconhecimento facial, análise de vestimentas, detecção de crachás, verificação de horários e análise de padrões comportamentais.
 
-## 🚀 Características Principais
+## Características Principais
 
-- **Transfer Learning** com ResNet-18 pré-treinado
-- **PyTorch** como framework principal
-- **Análise de horários** integrada com padrões de trabalho
-- **Relatórios detalhados** com estatísticas e anomalias
-- **Suporte a GPU** para treinamento e inferência
-- **Configuração flexível** via YAML
+- **Sistema Modular**: Analyzers especializados com responsabilidades separadas
+- **Reconhecimento Facial**: CASIA-WebFace + VGG Face2 + face_recognition
+- **Análise de Atributos**: WIDER Attribute Dataset (14 atributos corporativos)
+- **Detecção de Crachás**: OCR + CNN para validação obrigatória
+- **Análise de Horários**: Verificação automática de conformidade
+- **Análise de Padrões**: Detecção de mudanças comportamentais
+- **Sistema de Alertas**: Notificações em tempo real
+- **Relatórios Integrados**: Análise multi-modal consolidada
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 big_brother_cnn/
 │
-├── _DOCS/                 # Documentação
-│   ├── PRD.md             # Documento de Requisitos
-│   └── SVIRO_dataset_info.md  # Informações sobre dataset SVIRO
+├── _DOCS/                    # Documentação
+│   ├── PRD.md                # Documento de Requisitos
+│   └── SVIRO_dataset_info.md # Informações sobre dataset SVIRO
 │
-├── data/                   # Dataset e metadados
-│   ├── imagens/           # Imagens para treinamento/inferência
-│   ├── horarios.csv       # Horários de funcionamento dos sistemas
-│   └── rotinas.json       # Configuração de rotinas e padrões
+├── analyzers/                # ANALYZERS ESPECIALIZADOS
+│   ├── __init__.py           # Imports dos analyzers
+│   ├── base_analyzer.py      # Classe base para todos analyzers
+│   ├── face_analyzer.py      # Reconhecimento facial
+│   ├── attribute_analyzer.py # Análise de roupas/acessórios
+│   ├── badge_analyzer.py     # Detecção de crachás + OCR
+│   ├── schedule_analyzer.py  # Análise de horários/rotinas
+│   └── pattern_analyzer.py   # Análise de padrões comportamentais
 │
-├── models/
-│   └── cnn_model.py       # Implementação CNN com ResNet-18
+├── data/                    # Dataset e metadados
+│   ├── imagens/             # Imagens para treinamento/inferência
+│   ├── horarios.csv         # Horários de funcionamento
+│   ├── rotinas.json         # Configuração de rotinas
+│   └── patterns.db          # Base de dados de padrões (SQLite)
 │
-├── checkpoints/           # Modelos salvos (criado automaticamente)
-├── reports/              # Relatórios de inferência (criado automaticamente)
+├── models/                   # Modelos treinados
+│   ├── cnn_model.py          # ResNet-18 principal
+│   ├── employee_faces.pkl    # Base de faces conhecidas
+│   ├── attribute_model.pth   # Modelo de atributos
+│   └── badge_detector.pth    # Detector de crachás
 │
-├── train.py              # Script de treinamento
-├── inference.py          # Script de inferência
-├── utils.py              # Funções auxiliares
-├── test_system.py        # Script de teste do sistema
-├── config.yaml           # Configurações do modelo
-├── requirements.txt      # Dependências Python
-└── README.md            # Este arquivo
+├── checkpoints/             # Checkpoints do modelo principal
+├── reports/                 # Relatórios de análise
+├── logs/                    # Logs de debugging
+│
+├── integrated_analysis.py   # SISTEMA INTEGRADO PRINCIPAL
+├── train.py                 # Script de treinamento
+├── inference.py             # Script de inferência
+├── utils.py                 # Funções auxiliares
+├── test_system.py           # Testes automatizados
+├── example_integrated_analysis.py  # DEMO COMPLETA
+├── config.yaml              # Configurações detalhadas
+├── requirements.txt         # Dependências completas
+└── README.md               # Este arquivo
+```
+
+## Analyzers Especializados
+
+### 1. Face Analyzer
+**Baseado em**: CASIA-WebFace, VGG Face2, face_recognition
+```python
+# Funcionalidades
+- Detecção de múltiplas faces
+- Reconhecimento de funcionários conhecidos
+- Análise de qualidade facial
+- Base de dados de funcionários
+- Confiança de reconhecimento
+```
+
+### 2. Attribute Analyzer  
+**Baseado em**: WIDER Attribute Dataset (14 atributos)
+```python
+# Atributos Detectados
+- Vestimenta: formal/casual, manga longa/curta
+- Acessórios: óculos, chapéu, bolsa/mochila
+- Conformidade: dress code corporativo
+- Identificação: riscos de obstrução facial
+```
+
+### 3. Badge Analyzer
+**Baseado em**: CNN + Tesseract OCR + EasyOCR
+```python
+# Funcionalidades
+- Detecção automática de crachás
+- OCR para extração de texto
+- Validação de posicionamento
+- Verificação de visibilidade
+- Conformidade obrigatória
+```
+
+### 4. Schedule Analyzer
+**Integrado com**: horarios.csv + rotinas.json
+```python
+# Monitoramento
+- Horários de entrada/saída
+- Intervalos de almoço
+- Trabalho em fins de semana
+- Horas extras não autorizadas
+- Presença fora do expediente
+```
+
+### 5. Pattern Analyzer
+**Base de dados**: SQLite com histórico comportamental
+```python
+# Análise de Padrões
+- Trajetos habituais
+- Mudanças de rotina
+- Acesso a áreas restritas
+- Horários atípicos
+- Comportamento social
 ```
 
 ## Instalação
 
-### 1. Clonar o repositório
+### 1. Clonar repositório
 ```bash
 git clone <repositório>
 cd big_brother_cnn
@@ -53,247 +127,305 @@ cd big_brother_cnn
 pip install -r requirements.txt
 ```
 
-### 3. Testar o sistema
+### 3. Configurar Tesseract (Windows)
+```bash
+# Baixar e instalar Tesseract OCR
+# https://github.com/UB-Mannheim/tesseract/wiki
+```
+
+### 4. Testar sistema
 ```bash
 python test_system.py
 ```
 
 ## Uso Rápido
 
-### 1. Preparar dados
-Coloque suas imagens na pasta `data/imagens/` com nomes no formato:
-```
-funcionario_001_classe_0.jpg
-funcionario_002_classe_1.jpg
-...
-```
-
-### 2. Treinar modelo
+### Demo Completa
 ```bash
-python train.py --data_dir data --config config.yaml
+python example_integrated_analysis.py
 ```
 
-### 3. Fazer inferência
-```bash
-python inference.py --model_path checkpoints/best_model.pth --image_dir data/imagens
-```
-
-## ⚙️ Configuração
-
-Edite o arquivo `config.yaml` para ajustar:
-
+### Configuração
+Edite `config.yaml` para ajustar:
 ```yaml
-model:
-  num_classes: 10              # Número de classes
-  learning_rate: 0.0001        # Taxa de aprendizado
-  batch_size: 32               # Tamanho do batch
-  epochs: 50                   # Número de épocas
-  freeze_backbone: true        # Congelar ResNet-18
-
-data:
-  train_split: 0.8            # 80% para treino
-  validation_split: 0.1       # 10% para validação
-  test_split: 0.1            # 10% para teste
+analyzers:
+  face:
+    confidence_threshold: 0.6
+    recognition_tolerance: 0.6
+  
+  attributes:
+    required_formal_score: 0.6
+    detect_uniforms: true
+  
+  badge:
+    ocr_enabled: true
+    confidence_threshold: 0.7
+  
+  schedule:
+    tolerance_minutes: 15
+    weekend_work_alert: true
+    
+  patterns:
+    behavior_change_threshold: 0.3
+    restricted_areas: ['server_room', 'finance']
 ```
 
-## Classes de Detecção
+### Análise Integrada
+```python
+from integrated_analysis import IntegratedAnalysisSystem
 
-O sistema suporta as seguintes classes (configurável):
+# Inicializar sistema
+system = IntegratedAnalysisSystem('config.yaml')
 
+# Carregar imagem
+image_tensor = load_image_as_tensor('path/to/image.jpg')
+
+# Metadados
+metadata = {
+    'location': 'office_main',
+    'timestamp': datetime.now().isoformat(),
+    'camera_id': 'cam_001'
+}
+
+# Análise completa
+results = system.analyze_comprehensive(image_tensor, metadata)
+
+# Resumo
+summary = system.get_analysis_summary(results)
+print(summary)
 ```
-0: Vazio (sem funcionário)
-1: Funcionário presente
-2: Funcionário com equipamento
-3: Funcionário em movimento
-4: Múltiplos funcionários
-5: Situação anômala
-6: Baixa visibilidade
-7: Equipamento sem funcionário
-8: Visitante/não funcionário
-9: Incerto/baixa confiança
+
+## Casos de Uso Específicos
+
+### 1. **Detectar Funcionários Sem Crachá**
+```python
+badge_results = results['individual_analyses']['badge']
+if not badge_results['has_valid_badge']:
+    print("🚨 ALERTA: Funcionário sem crachá detectado")
 ```
 
-## Análise de Horários
+### 2. **Analisar Conformidade de Vestimenta**
+```python
+attr_results = results['individual_analyses']['attributes']
+if not attr_results['dress_code_compliant']:
+    print("⚠️ Dress code fora do padrão corporativo")
+```
 
-O sistema integra análise de horários através de:
+### 3. **Monitorar Horários de Trabalho**
+```python
+schedule_results = results['individual_analyses']['schedule']
+if schedule_results['compliance_status'] == 'violation':
+    print("⏰ Funcionário fora do horário autorizado")
+```
 
-### Padrões de Trabalho
-- **Horário comercial**: 06:30 - 18:30
-- **Plantão 24h**: 00:00 - 23:59
-- **Horários especiais**: Feriados e eventos
+### 4. **Detectar Mudanças de Padrão**
+```python
+if 'pattern_analysis' in results:
+    changes = results['pattern_analysis']['behavioral_changes']
+    if changes:
+        print(f"📊 {len(changes)} mudanças comportamentais detectadas")
+```
 
-### Detecção de Anomalias
-- Funcionários fora do horário
-- Ausência durante horário de trabalho
-- Padrões atípicos de presença
+### 5. **Sistema de Alertas**
+```python
+alerts = results['alerts']
+critical_alerts = [a for a in alerts if a['severity'] == 'critical']
+if critical_alerts:
+    print(f"🚨 {len(critical_alerts)} alertas críticos!")
+```
 
-## Relatórios
+## Métricas e Relatórios
 
-O sistema gera relatórios detalhados incluindo:
+### Relatório Integrado
+```json
+{
+  "timestamp": "2024-01-15T14:30:00",
+  "individual_analyses": {
+    "face": {"employee_detected": true, "confidence": 0.92},
+    "attributes": {"dress_code_compliant": true, "formal_score": 0.85},
+    "badge": {"has_valid_badge": true, "badge_visible": true},
+    "schedule": {"compliance_status": "compliant"},
+    "patterns": {"anomalies": [], "risk_level": "low"}
+  },
+  "integrated_assessment": {
+    "overall_assessment": {
+      "status": "normal",
+      "confidence": 0.89,
+      "action_required": false
+    }
+  },
+  "alerts": [],
+  "recommendations": ["Continuar monitoramento de rotina"]
+}
+```
 
-### Estatísticas
-- Total de imagens processadas
-- Taxa de detecção
-- Distribuição por classe
-- Confiança média/máxima/mínima
+### Dashboard de Conformidade
+- ✅ **Identificação**: João Silva (92% confiança)
+- ✅ **Crachá**: Visível e válido
+- ✅ **Vestimenta**: Conformidade total (85% formal)
+- ✅ **Horário**: Dentro do expediente
+- ✅ **Padrão**: Comportamento normal
 
-### Análise de Padrões
-- Correlação com horários de trabalho
-- Identificação de anomalias
-- Sugestões de ações
-
-### Formatos de Saída
-- **JSON**: Dados estruturados para integração
-- **TXT**: Resumo legível para humanos
-
-## Arquitetura do Modelo
-
-### ResNet-18 Base
-- **Backbone**: ResNet-18 pré-treinado no ImageNet
-- **Transfer Learning**: Camadas congeladas para efficiency
-- **Camadas customizadas**: Classificador adaptado ao domínio
-
-### Otimizações
-- **Adam Optimizer**: Taxa de aprendizado adaptativa
-- **Early Stopping**: Previne overfitting
-- **Data Augmentation**: Aumenta diversidade dos dados
-
-## Métricas de Performance
-
-### Métricas Principais
-- **Accuracy**: Precisão geral do modelo
-- **Precision/Recall**: Por classe individual
-- **F1-Score**: Métrica balanceada
-- **Confidence**: Distribuição de confiança
-
-### Benchmarking
-- Comparação com dataset SVIRO
-- Validação cruzada
-- Testes de robustez
-
-## 🔗 Integração com Datasets
+## Integração com Datasets
 
 ### SVIRO Dataset
-O sistema é compatível com o dataset SVIRO para:
-- **Treinamento inicial**: Transfer learning
-- **Validação**: Benchmark de performance
-- **Teste de robustez**: Diferentes condições
+Compatível com [SVIRO Dataset](https://sviro.kl.dfki.de/) para:
+- Treinamento inicial com transfer learning
+- Validação de robustez em diferentes condições
+- Benchmark de performance
 
-Consulte `_DOCS/SVIRO_dataset_info.md` para mais detalhes.
+### Unity Perception
+Integração com [Unity Perception](https://github.com/Unity-Technologies/com.unity.perception) para:
+- Geração de dados sintéticos
+- Simulação de cenários corporativos
+- Aumento de dataset
 
-### Outros Datasets
+### Outros Datasets Suportados
 - **Market-1501**: Re-identificação de pessoas
-- **CASIA-WebFace**: Reconhecimento facial
-- **WIDER**: Atributos de pessoas
+- **CASIA-WebFace**: Reconhecimento facial robusto
+- **WIDER Attribute**: Análise detalhada de atributos
 
-## 🛠️ Scripts Disponíveis
+## Sistema de Alertas
+
+### Níveis de Severidade
+- 🔴 **Critical**: Pessoa não identificada, acesso não autorizado
+- 🟠 **High**: Violação de horário, sem crachá
+- 🟡 **Medium**: Dress code inadequado, padrão atípico
+- 🟢 **Low**: Variações menores nos padrões
+
+### Políticas Configuráveis
+```yaml
+policies:
+  mandatory_badge: true          # Crachá obrigatório
+  dress_code_enforcement: true   # Enforçar dress code
+  restricted_area_monitoring: true  # Monitorar áreas restritas
+  after_hours_alerts: true      # Alertas fora do horário
+  unknown_person_alerts: true   # Alertas pessoa desconhecida
+```
+
+## Scripts Disponíveis
+
+### `integrated_analysis.py`
+Sistema principal que orquestra todos os analyzers
+
+### `example_integrated_analysis.py`
+Demo completa com casos de uso reais
 
 ### `train.py`
-Treinamento do modelo com features:
-- Validação cruzada
-- Checkpoints automáticos
-- Gráficos de treinamento
-- Early stopping
-
 ```bash
 python train.py --config config.yaml --data_dir data
 ```
 
 ### `inference.py`
-Inferência com opções:
-- Imagem única ou lote
-- Relatórios detalhados
-- Análise de anomalias
-- Integração com horários
-
 ```bash
 python inference.py --model_path checkpoints/best_model.pth --image_dir data/imagens
 ```
 
 ### `test_system.py`
-Testes automatizados:
-- Validação de configuração
-- Teste de modelo
-- Verificação de dados
-- Análise de horários
-
 ```bash
-python test_system.py
+python test_system.py  # Testa todos os componentes
 ```
 
 ## 🐛 Solução de Problemas
 
-### Erro: "Nenhuma imagem encontrada"
+### Erro: "Face recognition não instalado"
 ```bash
-# Criar imagens dummy para teste
-python test_system.py
+pip install face-recognition
+# No Windows, pode precisar de Visual Studio Build Tools
+```
+
+### Erro: "Tesseract não encontrado"
+```bash
+# Windows: Instalar Tesseract OCR
+# Linux: sudo apt-get install tesseract-ocr
+# macOS: brew install tesseract
 ```
 
 ### Erro: "CUDA out of memory"
 ```yaml
-# Reduzir batch_size no config.yaml
+# config.yaml
+device:
+  use_cuda: false  # Forçar CPU
+# ou
 model:
-  batch_size: 16  # ou menor
+  batch_size: 8    # Reduzir batch size
 ```
 
-### Erro: "Module not found"
-```bash
-# Reinstalar dependências
-pip install -r requirements.txt
+### Erro: "Sem base de funcionários"
+```python
+# Criar base de faces conhecidas
+from analyzers import FaceAnalyzer
+face_analyzer = FaceAnalyzer(config, device)
+face_analyzer.add_employee_face('path/to/photo.jpg', 'Nome Funcionario')
+face_analyzer.save_employee_database('models/employee_faces.pkl')
 ```
 
-## 📋 Requisitos do Sistema
+## Requisitos do Sistema
 
-### Hardware
-- **RAM**: 8GB mínimo, 16GB recomendado
-- **GPU**: NVIDIA com CUDA (opcional, mas recomendado)
-- **Armazenamento**: 2GB livres
+### Hardware Mínimo
+- **RAM**: 8GB (16GB recomendado)
+- **GPU**: NVIDIA GTX 1060+ (opcional, mas acelera 10x)
+- **Armazenamento**: 5GB livres
+- **CPU**: Intel i5 ou AMD Ryzen 5+
 
 ### Software
 - **Python**: 3.8+
 - **PyTorch**: 1.13+
-- **CUDA**: 11.0+ (se usando GPU)
+- **CUDA**: 11.0+ (para GPU)
+- **Tesseract OCR**: 4.0+
 
-## 🤝 Contribuição
+## Segurança e Privacidade
 
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
+### Dados Biométricos
+- Encodings faciais criptografados
+- Não armazena imagens originais
+- Conformidade com LGPD/GDPR
 
-## 📄 Licença
+### Logs e Auditoria
+- Histórico completo de detecções
+- Logs de acesso e modificações
+- Relatórios de conformidade
 
-Este projeto segue as diretrizes:
-- **Dataset SVIRO**: CC BY-NC-SA 4.0 (não comercial)
-- **Código próprio**: A definir pelo projeto
 
-## 🔍 Monitoramento e Logs
+### Criando Novo Analyzer
+```python
+from analyzers.base_analyzer import BaseAnalyzer
 
-### Logs de Treinamento
+class MyCustomAnalyzer(BaseAnalyzer):
+    def load_model(self, model_path=None):
+        # Implementar carregamento
+        pass
+    
+    def analyze(self, image, metadata=None):
+        # Implementar análise
+        return self.postprocess_results(results)
+    
+    def get_confidence_threshold(self):
+        return 0.7
 ```
-Epoch 1/50: Train Loss: 0.8456, Val Loss: 0.7234, Val Acc: 72.34%
-Epoch 2/50: Train Loss: 0.6789, Val Loss: 0.6123, Val Acc: 78.90%
-...
-```
 
-### Relatórios de Inferência
-```
-=== RESUMO DA INFERÊNCIA ===
-Imagens processadas: 150
-Detecções com alta confiança: 132
-Taxa de detecção: 88.0%
-Anomalias detectadas: 3
-```
+### Datasets Utilizados
+- **SVIRO**: CC BY-NC-SA 4.0 (não comercial)
+- **WIDER**: Uso acadêmico
+- **CASIA-WebFace**: Uso de pesquisa
 
-## 📞 Suporte
+### Bibliotecas
+- PyTorch: BSD License
+- face_recognition: MIT License
+- OpenCV: Apache License 2.0
 
-Para dúvidas ou problemas:
-1. Verifique a documentação em `_DOCS/`
-2. Execute `python test_system.py`
-3. Consulte os logs em `checkpoints/`
-4. Abra uma issue no repositório
+### Documentação
+1. Consulte `_DOCS/` para detalhes técnicos
+2. Execute `python test_system.py` para diagnósticos
+3. Verifique logs em `logs/`
+
+### Issues Comuns
+- Falha na detecção → Verificar iluminação e qualidade da imagem
+- Baixa performance → Configurar GPU ou reduzir batch_size
+- Problemas de OCR → Instalar Tesseract corretamente
 
 ---
 
-**Desenvolvido para vigilância inteligente com foco em detecção de funcionários e análise de padrões de trabalho.** 
+**🏢 Sistema Big Brother CNN - Vigilância Corporativa Inteligente com Analyzers Especializados**
+
+*Desenvolvido para monitoramento completo e análise comportamental avançada em ambientes corporativos.* 
