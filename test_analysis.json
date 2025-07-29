@@ -1,0 +1,12 @@
+{
+  "analysis_type": "face",
+  "image": {
+    "filename": "test_face.jpg",
+    "image_data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+    "metadata": {
+      "location": "entrance_main",
+      "camera_id": "cam_001",
+      "timestamp": "2024-01-01T10:00:00Z"
+    }
+  }
+} 

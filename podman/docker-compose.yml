@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   postgres:
+    container_name: bigbrother_postgres
     build:
       context: ./postgres
       dockerfile: Dockerfile
@@ -17,7 +18,7 @@ services:
       - POSTGRES_PASSWORD=bigbrother
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - bigbrother_postgres_data:/var/lib/postgresql/data
     networks:
       - bigbrother_net
     healthcheck:
@@ -27,6 +28,7 @@ services:
       retries: 5
 
   kafka:
+    container_name: bigbrother_kafka
     build:
       context: ./kafka
       dockerfile: Dockerfile
@@ -49,7 +51,7 @@ services:
       - KAFKA_LOG_DIRS=/var/lib/kafka/data
       - KAFKA_CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
     volumes:
-      - kafka_data:/var/lib/kafka/data
+      - bigbrother_kafka_data:/var/lib/kafka/data
       - ./kafka/topics.json:/etc/kafka/topics.json:ro
     networks:
       - bigbrother_net
@@ -60,6 +62,7 @@ services:
       retries: 3
 
   minio:
+    container_name: bigbrother_minio
     build:
       context: ./minio
       dockerfile: Dockerfile
@@ -74,8 +77,7 @@ services:
       - MINIO_ROOT_PASSWORD=bigbrother
       - MINIO_PROMETHEUS_AUTH_TYPE=public
     volumes:
-      - minio_data:/data
-      - ./minio/buckets.json:/data/config/buckets.json:ro
+      - bigbrother_minio_data:/data
     networks:
       - bigbrother_net
     healthcheck:
@@ -85,6 +87,7 @@ services:
       retries: 3
 
   mlflow:
+    container_name: bigbrother_mlflow
     build:
       context: ./mlflow
       dockerfile: Dockerfile
@@ -97,7 +100,7 @@ services:
       - MLFLOW_BACKEND_STORE_URI=postgresql://bigbrother:bigbrother@postgres:5432/bigbrother
       - MLFLOW_DEFAULT_ARTIFACT_ROOT=s3://models/
     volumes:
-      - mlflow_data:/var/log/mlflow
+      - bigbrother_mlflow_data:/var/log/mlflow
     networks:
       - bigbrother_net
     depends_on:
@@ -112,12 +115,13 @@ services:
       retries: 3
 
   prometheus:
+    container_name: bigbrother_prometheus
     image: prom/prometheus:v2.48.0
     ports:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
+      - bigbrother_prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -134,6 +138,7 @@ services:
       retries: 3
 
   grafana:
+    container_name: bigbrother_grafana
     build:
       context: ./grafana
       dockerfile: Dockerfile
@@ -145,7 +150,7 @@ services:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=false
     volumes:
-      - grafana_data:/var/lib/grafana
+      - bigbrother_grafana_data:/var/lib/grafana
     networks:
       - bigbrother_net
     depends_on:
@@ -158,9 +163,10 @@ services:
       retries: 3
 
   fastapi:
+    container_name: bigbrother_fastapi
     build:
-      context: ../
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: fastapi/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -174,6 +180,7 @@ services:
       - DB_NAME=bigbrother
       - DB_USER=bigbrother
       - DB_PASSWORD=bigbrother
+      - DETECTRON2_SERVICE_URL=http://detectron2:8001
     volumes:
       - ../big_brother_cnn:/app/big_brother_cnn:ro
     networks:
@@ -187,24 +194,80 @@ services:
         condition: service_healthy
       mlflow:
         condition: service_healthy
+      detectron2:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
 
+  detectron2:
+    container_name: bigbrother_detectron2
+    build:
+      context: ./detectron2
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    networks:
+      - bigbrother_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ultralytics:
+    container_name: bigbrother_ultralytics
+    build:
+      context: ./ultralytics
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    networks:
+      - bigbrother_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  cassandra:
+    container_name: bigbrother_cassandra
+    build:
+      context: ./cassandra
+      dockerfile: Dockerfile
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=bigbrother_cluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - bigbrother_cassandra_data:/var/lib/cassandra
+    networks:
+      - bigbrother_net
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 volumes:
-  postgres_data:
+  bigbrother_postgres_data:
     driver: local
-  kafka_data:
+  bigbrother_kafka_data:
     driver: local
-  minio_data:
+  bigbrother_minio_data:
     driver: local
-  mlflow_data:
+  bigbrother_mlflow_data:
     driver: local
-  prometheus_data:
+  bigbrother_prometheus_data:
     driver: local
-  grafana_data:
+  bigbrother_grafana_data:
+    driver: local
+  bigbrother_cassandra_data:
     driver: local
 
 networks:

@@ -295,6 +295,22 @@ services:
           memory: 4G
 ```
 
+## 📚 Organização dos Requirements e Build dos Serviços
+
+Os arquivos de dependências (requirements) estão centralizados em `podman/requirements/`:
+
+- `base.txt`: dependências comuns a todos os serviços.
+- `fastapi.txt`: inclui o `base.txt` e adiciona dependências específicas da API.
+- `cnn.txt`: inclui o `base.txt` e adiciona dependências de visão computacional e machine learning.
+
+Cada serviço utiliza seu requirements específico durante o build do Docker:
+- O serviço FastAPI usa `fastapi.txt`.
+- Serviços de ML/CNN usam `cnn.txt`.
+
+> **Importante:** Para adicionar novas dependências, edite o arquivo requirements correspondente em `podman/requirements/`.
+
+Os requirements antigos e duplicados foram removidos para evitar inconsistências.
+
 ## 🤝 Contribuição
 
 1. Fork o projeto
