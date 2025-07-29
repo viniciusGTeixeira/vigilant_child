@@ -1,6 +1,6 @@
 # Big Brother CNN - Sistema de Vigilância com IA
 
-Você já leu 1988? acredito George Owell era um doido e nessa altura do campeonato não acho que ele seja diferente do que seria o Monark ou o Olavo de Carvalho, provocações e brincadeiras a parte, ele propôs uma ideia interessante, o Big Brother junto a todo o conjunto de conceitos e ações que o governo autoritário trás, como usar crianças para manutenção organica do regime, agora que assustei vocês entendam que este é um sistema completo de vigilância inteligente usando CNNs para análise de imagens, detecção facial, reconhecimento de crachás e monitoramento de conformidade.
+Você já leu 1984? acredito que George Owell era um doido e nessa altura do campeonato não acho que ele seja diferente do que seria o Monark ou o Olavo de Carvalho, provocações e brincadeiras a parte, ele propôs uma ideia interessante, o Big Brother junto a todo o conjunto de conceitos e ações que o governo autoritário (nada parecido com a realidade) trás, como usar crianças para manutenção organica do regime por exemplo (não vimos nada proximo disso em algumas decadas anteriores), agora que assustei vocês entendam que este é um sistema completo de vigilância inteligente usando CNNs para análise de imagens, detecção facial, reconhecimento de crachás e monitoramento de conformidade.
 
 ## 🏗️ Arquitetura
 
