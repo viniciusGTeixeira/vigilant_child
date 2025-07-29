@@ -1,6 +1,6 @@
 # Big Brother CNN - Sistema de Vigilância com IA
 
-Sistema completo de vigilância inteligente usando CNNs para análise de imagens, detecção facial, reconhecimento de crachás e monitoramento de conformidade.
+Você já leu 1988? acredito George Owell era um doido e nessa altura do campeonato não acho que ele seja diferente do que seria o Monark ou o Olavo de Carvalho, provocações e brincadeiras a parte, ele propôs uma ideia interessante, o Big Brother junto a todo o conjunto de conceitos e ações que o governo autoritário trás, como usar crianças para manutenção organica do regime, agora que assustei vocês entendam que este é um sistema completo de vigilância inteligente usando CNNs para análise de imagens, detecção facial, reconhecimento de crachás e monitoramento de conformidade.
 
 ## 🏗️ Arquitetura
 
@@ -41,6 +41,7 @@ O sistema é composto por:
 ### Pré-requisitos
 - Docker/Podman
 - Python 3.11+
+- Python 3.8 (stable version)
 - Git
 
 ### Configuração Rápida
@@ -310,22 +311,6 @@ Cada serviço utiliza seu requirements específico durante o build do Docker:
 > **Importante:** Para adicionar novas dependências, edite o arquivo requirements correspondente em `podman/requirements/`.
 
 Os requirements antigos e duplicados foram removidos para evitar inconsistências.
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para detalhes.
-
-## 🆘 Suporte
-
-Para suporte, abra uma issue no GitHub ou entre em contato com a equipe de desenvolvimento.
 
 ---
 
