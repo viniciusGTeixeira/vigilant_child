@@ -310,8 +310,6 @@ Cada serviço utiliza seu requirements específico durante o build do Docker:
 
 > **Importante:** Para adicionar novas dependências, edite o arquivo requirements correspondente em `podman/requirements/`.
 
-Os requirements antigos e duplicados foram removidos para evitar inconsistências.
-
 ---
 
 **Big Brother CNN** - Sistema de Vigilância Inteligente com IA 🤖👁️ 
